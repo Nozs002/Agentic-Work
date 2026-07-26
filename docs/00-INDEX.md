@@ -8,6 +8,8 @@
 
 ## 0. Cây tài liệu hệ thống
 
+- 📄 [00-System-Architecture.md](00-System-Architecture.md) — Kiến trúc 4 tầng, Luồng Đa tác tử & Cơ chế Đồng bộ 3rd-Party Skills
+- 📄 [01-Agent-Data-Contracts.md](01-Agent-Data-Contracts.md) — Quy chuẩn Hợp đồng Dữ liệu (TypeScript Interfaces & JSON Schemas) giữa các Agent
 - 📁 [00-Meta](00-Meta/) — Các mẫu Template chuẩn hóa (Change Request, Business Rule, Epic, Feature, Data Dictionary...)
 - 📁 [01-Requirements](01-Requirements/) — Yêu cầu hệ thống (Epics, Features, User Stories)
 - 📁 [02-Business-Rules](02-Business-Rules/) — Tập quy tắc nghiệp vụ (Core Rules, Permissions, Validation Rules)

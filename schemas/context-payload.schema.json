@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticwork.io/schemas/context-payload.schema.json",
+  "title": "ContextPayloadContract",
+  "description": "Hợp đồng Dữ liệu Ngữ cảnh do Knowledge Agent bóc tách và tối ưu từ Code AST Graph và Business Rules Vault",
+  "type": "object",
+  "required": ["traceId", "contextId", "dagId", "timestamp", "tokenMetrics", "subgraphs", "businessRules"],
+  "properties": {
+    "traceId": {
+      "type": "string",
+      "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
+    },
+    "contextId": {
+      "type": "string",
+      "description": "Mã định danh phiên bối cảnh"
+    },
+    "dagId": {
+      "type": "string",
+      "description": "Mã DAG tương ứng"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tokenMetrics": {
+      "type": "object",
+      "required": ["estimatedTokenCount", "pruningRatioPercentage"],
+      "properties": {
+        "estimatedTokenCount": {
+          "type": "integer"
+        },
+        "pruningRatioPercentage": {
+          "type": "number",
+          "description": "Tỷ lệ token đã cắt gọt so với nạp toàn bộ file"
+        }
+      }
+    },
+    "subgraphs": {
+      "type": "array",
+      "description": "Danh sách các cây AST Subgraph được cắt lọc",
+      "items": {
+        "type": "object",
+        "required": ["filePath", "symbolType", "symbolName", "snippet"],
+        "properties": {
+          "filePath": {
+            "type": "string"
+          },
+          "symbolType": {
+            "type": "string",
+            "enum": ["CLASS", "INTERFACE", "FUNCTION", "METHOD", "TYPE_ALIAS"]
+          },
+          "symbolName": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": "string",
+            "description": "Đoạn code AST rút gọn"
+          }
+        }
+      }
+    },
+    "businessRules": {
+      "type": "array",
+      "description": "Các luật nghiệp vụ trong Obsidian Vault áp dụng cho task",
+      "items": {
+        "type": "object",
+        "required": ["ruleId", "ruleTitle", "ruleContent"],
+        "properties": {
+          "ruleId": {
+            "type": "string"
+          },
+          "ruleTitle": {
+            "type": "string"
+          },
+          "vaultPath": {
+            "type": "string"
+          },
+          "ruleContent": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dataDictionarySchemas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["moduleName", "tableName", "fields"],
+        "properties": {
+          "moduleName": {
+            "type": "string"
+          },
+          "tableName": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fieldName": { "type": "string" },
+                "dataType": { "type": "string" },
+                "isRequired": { "type": "boolean" },
+                "description": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "resolvedDependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dependencyName", "status"],
+        "properties": {
+          "dependencyName": { "type": "string" },
+          "status": { "type": "string", "enum": ["PRESENT", "MISSING_ACTION_REQUIRED"] }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

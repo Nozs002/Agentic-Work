@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticwork.io/schemas/specialist-result.schema.json",
+  "title": "SpecialistResultContract",
+  "description": "Phong bì Đầu ra Chuẩn hóa (Output Envelope) do Specialist Agents sinh ra trong RAM gửi tới GW2",
+  "type": "object",
+  "required": ["traceId", "resultId", "taskId", "specialistRole", "executionType"],
+  "properties": {
+    "traceId": {
+      "type": "string",
+      "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
+    },
+    "resultId": {
+      "type": "string"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "specialistRole": {
+      "type": "string",
+      "enum": ["BA_AGENT", "ARCHITECT_AGENT", "CODER_AGENT", "DATABASE_AGENT", "TESTER_AGENT"]
+    },
+    "executionType": {
+      "type": "string",
+      "enum": ["FILE_CREATE", "FILE_MODIFY", "FILE_DELETE", "CHAT_RESPONSE"],
+      "description": "Loại hành động đầu ra đề xuất"
+    },
+    "proposedPayload": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["targetPath"],
+        "properties": {
+          "targetPath": {
+            "type": "string",
+            "description": "Đường dẫn file mục tiêu"
+          },
+          "content": {
+            "type": "string",
+            "description": "Nội dung file đầy đủ nếu CREATE hoặc thay đổi hoàn toàn"
+          },
+          "replacementChunk": {
+            "type": "object",
+            "required": ["startLine", "endLine", "targetContent", "replacementContent"],
+            "properties": {
+              "startLine": { "type": "integer", "minimum": 1 },
+              "endLine": { "type": "integer", "minimum": 1 },
+              "targetContent": { "type": "string" },
+              "replacementContent": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "chatMessage": {
+      "type": "string",
+      "description": "Nội dung phản hồi trực tiếp cho người dùng nếu executionType là CHAT_RESPONSE"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "skillUsed": { "type": "string" },
+        "affectedModules": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

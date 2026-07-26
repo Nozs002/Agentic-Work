@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticwork.io/schemas/disk-write.schema.json",
+  "title": "DiskWriteContract",
+  "description": "Hợp đồng Dữ liệu Thực thi Ghi Ổ đĩa Thuần túy cho File System Agent và Git Agent",
+  "type": "object",
+  "required": ["traceId", "operationId", "timestamp", "qaSignature", "operations"],
+  "properties": {
+    "traceId": {
+      "type": "string",
+      "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
+    },
+    "operationId": {
+      "type": "string",
+      "description": "Mã định danh phiên ghi đĩa"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "qaSignature": {
+      "type": "string",
+      "description": "BẮT BUỘC: Chữ ký GW2 đã phê duyệt (PASSED)"
+    },
+    "operations": {
+      "type": "array",
+      "description": "Danh sách các thao tác I/O đơn nguyên (Atomic Write Operations)",
+      "items": {
+        "type": "object",
+        "required": ["type", "targetPath"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["CREATE_FILE", "MODIFY_FILE", "DELETE_FILE"]
+          },
+          "targetPath": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "description": "Nội dung hoàn chỉnh nếu CREATE_FILE hoặc ghi đè"
+          },
+          "replacementChunk": {
+            "type": "object",
+            "required": ["startLine", "endLine", "targetContent", "replacementContent"],
+            "properties": {
+              "startLine": { "type": "integer", "minimum": 1 },
+              "endLine": { "type": "integer", "minimum": 1 },
+              "targetContent": { "type": "string" },
+              "replacementContent": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "rollbackSnapshot": {
+      "type": "array",
+      "description": "Bản lưu vết trước khi sửa file để sẵn sàng Rollback nếu có sự cố",
+      "items": {
+        "type": "object",
+        "properties": {
+          "targetPath": { "type": "string" },
+          "originalContent": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
