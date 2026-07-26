@@ -9,11 +9,24 @@ description: >
   brainstorming (phân kỳ → hội tụ) khi yêu cầu còn lờ mờ, và TUYỆT ĐỐI không bịa ý khách:
   cái gì chưa chắc thì ghi thành OPEN QUESTION để xác nhận lại với stakeholder. Đầu ra: một
   bản Change Request nháp ĐÚNG template vault + danh sách câu hỏi gửi khách, sẵn sàng bàn giao
-  cho module-documentation (viết spec) và jira-integration (tạo task). Dùng khi người dùng nói
-  (VI/EN): "làm rõ yêu cầu này" · "phỏng vấn yêu cầu" · "khách muốn X nhưng chưa rõ" · "đào sâu
-  requirement" · "clarify this requirement / change request" · "scope cái này giúp tôi" ·
-  "brainstorm yêu cầu" · "elicit requirements" · "trước khi viết spec hỏi tôi cho rõ đã" ·
-  "requirements interview". module-documentation (VIẾT spec): skill này là bước TRƯỚC đó — biến ý mơ hồ thành CR đủ rõ để viết spec.
+  cho module-documentation (viết spec) và jira-integration (tạo task).
+intentCategory: REQUIREMENTS_REFINEMENT
+triggers:
+  - "làm rõ yêu cầu này"
+  - "phỏng vấn yêu cầu"
+  - "khách muốn X nhưng chưa rõ"
+  - "đào sâu requirement"
+  - "clarify this requirement"
+  - "scope cái này giúp tôi"
+  - "brainstorm yêu cầu"
+  - "elicit requirements"
+  - "requirements interview"
+
+requires:
+  templates:
+    - "docs/00-Meta/Templates/Template-Change-Request.md"
+  registries:
+    - "docs/00-INDEX.md"
 ---
 
 # Requirements Interview — Phỏng vấn yêu cầu kiểu Socratic
@@ -68,6 +81,26 @@ Hỏi theo thứ tự, mỗi tầng là một lượt (gộp tầng nhỏ nếu 
    - **A) Change Request nháp** (markdown, lưu vào nơi quy ước của vault, liên kết `[[module]]`).
    - **B) Danh sách câu hỏi gửi Khách hàng** (song ngữ `{{LANG_PRIMARY}}` + `{{LANG_SECONDARY}}`, đánh số, ngắn gọn để khách trả lời nhanh).
 6. **Bàn giao:** gợi ý bước kế tiếp — `module-documentation` (viết spec đầy đủ) khi CR đã đủ rõ.
+
+## Định dạng Đầu ra (Artifact Contract / Output Envelope)
+BA Agent bắt buộc đóng gói kết quả theo chuẩn `SpecialistResultContract` (Output Envelope) để gửi tới Gateway 2 (Review QA) kiểm duyệt trước khi Action Agent lưu file:
+
+```json
+{
+  "executionType": "FILE_CREATE",
+  "proposedPayload": [
+    {
+      "targetPath": "docs/06-Change-Log/CR-YYYY-MMDD-[ten-cr].md",
+      "content": "...Nội dung Change Request đúng chuẩn Template-Change-Request.md..."
+    }
+  ],
+  "chatMessage": "Đã hoàn thành phỏng vấn và tạo bản nháp CR. Dưới đây là danh sách câu hỏi cần xác nhận thêm với Khách hàng...",
+  "metadata": {
+    "skillUsed": "requirements-interview",
+    "affectedModules": ["SALE", "CRM"]
+  }
+}
+```
 
 ## Ghi chú model-routing & token (tùy chọn, để tiết kiệm)
 - Việc **suy luận/đào sâu/soạn CR** → giữ model mạnh cho chất lượng.
