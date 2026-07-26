@@ -167,8 +167,12 @@ export interface SpecialistResultContract extends BaseContract {
 export interface ReviewQAContract extends BaseContract {
   reviewId: string;
   resultId: string;
-  status: 'PASSED' | 'FAILED';
-  qaSignature?: string; // Bắt buộc khi PASSED
+  status: 'PASSED' | 'FAILED' | 'FAILED_MAX_RETRIES';
+  retryMetrics?: {
+    currentAttempt: number; // Số lần đã thử hiện tại (1, 2, 3...)
+    maxAllowed: number;     // Giới hạn số lần thử lại tối đa (ví dụ: 3)
+  };
+  qaSignature?: string; // Bắt buộc khi PASSED để cấp phép ghi đĩa
   feedback?: {
     linterErrors?: string[];
     syntaxErrors?: string[];

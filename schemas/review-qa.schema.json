@@ -22,12 +22,27 @@
     },
     "status": {
       "type": "string",
-      "enum": ["PASSED", "FAILED"],
-      "description": "Trạng thái kiểm tra sau sinh code/spec"
+      "enum": ["PASSED", "FAILED", "FAILED_MAX_RETRIES"],
+      "description": "Trạng thái kiểm tra sau sinh code/spec. FAILED_MAX_RETRIES nghĩa là vượt quá số lần thử lại cho phép và cần con người can thiệp."
+    },
+    "retryMetrics": {
+      "type": "object",
+      "description": "Thông số đếm vòng lặp sửa lỗi (Retry Loop Counter) để phòng chống lặp vô hạn",
+      "required": ["currentAttempt", "maxAllowed"],
+      "properties": {
+        "currentAttempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxAllowed": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
     },
     "qaSignature": {
       "type": "string",
-      "description": "Chữ ký mã hóa xác nhận đã vượt qua GW2 (Bắt buộc để Action Agent thực thi)"
+      "description": "Chữ ký mã hóa xác nhận đã vượt qua GW2 (Bắt buộc khi PASSED để Action Agent thực thi)"
     },
     "feedback": {
       "type": "object",
