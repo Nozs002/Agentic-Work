@@ -4,12 +4,16 @@
   "title": "SkillManifestSchema",
   "description": "JSON Schema định nghĩa cấu trúc chuẩn của YAML Frontmatter trong mỗi file SKILL.md (Intent Contract)",
   "type": "object",
-  "required": ["name", "description", "intentCategory", "triggers", "requires"],
+  "required": ["name", "description", "intentCategory", "intent_triggers", "required_contracts"],
   "properties": {
     "name": {
       "type": "string",
       "pattern": "^[a-z0-9-]+$",
       "description": "Tên định danh duy nhất của Skill (viết thường, dùng dấu gạch ngang)"
+    },
+    "type": {
+      "type": "string",
+      "default": "skill"
     },
     "description": {
       "type": "string",
@@ -29,7 +33,11 @@
       ],
       "description": "Phân loại nhóm ý định nghiệp vụ của Skill"
     },
-    "triggers": {
+    "target_agent": {
+      "type": "string",
+      "description": "Agent chuyên trách chính chạy Skill này"
+    },
+    "intent_triggers": {
       "type": "array",
       "minItems": 1,
       "items": {
@@ -37,29 +45,58 @@
       },
       "description": "Danh sách các từ khóa hoặc cụm câu lệnh (VI/EN) kích hoạt Skill"
     },
+    "triggers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Alias tương thích ngược cho intent_triggers"
+    },
+    "when_to_use": {
+      "type": "object",
+      "description": "Điều kiện kích hoạt và ranh giới sử dụng Skill",
+      "properties": {
+        "pre_conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "do_not_use_if": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "related_skills": {
+      "type": "array",
+      "description": "Phân biệt ranh giới với các Skill lân cận",
+      "items": {
+        "type": "object",
+        "required": ["name", "difference"],
+        "properties": {
+          "name": { "type": "string" },
+          "difference": { "type": "string" }
+        }
+      }
+    },
+    "required_contracts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Danh sách các hợp đồng dữ liệu giao tiếp (VD: ContextPayloadContract, SpecialistResultContract)"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Thẻ nhãn phục vụ lọc và quản trị Skill"
+    },
     "requires": {
       "type": "object",
-      "description": "Khai báo tường minh các tài nguyên bối cảnh cần Knowledge Agent nạp",
+      "description": "Khai báo tài nguyên bối cảnh (Tùy chọn, ưu tiên dùng ContextPayloadContract)",
       "properties": {
         "templates": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Danh sách các đường dẫn template file trong docs/00-Meta/Templates"
+          "items": { "type": "string" }
         },
         "registries": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Danh sách các registry file (00-INDEX.md, module-registry.md)"
-        },
-        "astGraphSymbols": {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Danh sách từ khóa AST Code Graph cần bóc tách"
-        },
-        "npmPackages": {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Các gói thư viện phụ thuộc"
+          "items": { "type": "string" }
         }
       }
     },
@@ -73,11 +110,6 @@
     "is3rdParty": {
       "type": "boolean",
       "default": false
-    },
-    "modelPreference": {
-      "type": "string",
-      "enum": ["HIGH_PERFORMANCE", "FAST_ROUTING"],
-      "default": "HIGH_PERFORMANCE"
     }
   },
   "additionalProperties": false

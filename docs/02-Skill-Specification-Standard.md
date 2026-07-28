@@ -35,32 +35,42 @@ Mỗi file `SKILL.md` **BẮT BUỘC** phải chứa khối YAML Frontmatter ở
 ```yaml
 ---
 name: requirements-interview
+type: skill
+intentCategory: REQUIREMENTS_REFINEMENT
 description: >
   PHỎNG VẤN YÊU CẦU kiểu Socratic để làm rõ yêu cầu trước khi viết spec...
-intentCategory: REQUIREMENTS_REFINEMENT
-triggers:
+target_agent: BA_AGENT
+intent_triggers:
   - "làm rõ yêu cầu này"
   - "phỏng vấn yêu cầu"
   - "requirements interview"
 
-# Khai báo tường minh bối cảnh cần Knowledge Agent nạp (Intent Contract)
-requires:
-  templates:
-    - "docs/00-Meta/Templates/Template-Change-Request.md"
-  registries:
-    - "docs/00-INDEX.md"
+when_to_use:
+  pre_conditions:
+    - "Yêu cầu người dùng còn mơ hồ, chưa rõ scope hoặc edge cases"
+  do_not_use_if:
+    - "Yêu cầu đã cực kỳ đầy đủ thông tin → Chuyển sang skill write-spec"
+
+related_skills:
+  - name: "module-documentation"
+    difference: "Skill requirements-interview dùng để HỎI ĐÀO SÂU (interview) và tạo CR nháp, còn module-documentation dùng để XUẤT SPEC."
+
+required_contracts: ["ContextPayloadContract", "SpecialistResultContract"]
+tags: ["ba", "requirements", "interview"]
 ---
 ```
 
-### Chi tiết các trường YAML Bắt buộc:
+### Chi tiết các trường YAML Bắt buộc & Khuyên dùng:
 
 | Trường | Kiểu dữ liệu | Mô tả |
 | :--- | :--- | :--- |
-| `name` | `string` | Tên slug định danh duy nhất của Skill. |
-| `description` | `string` | Mô tả mục tiêu, bài toán và hoàn cảnh áp dụng Skill. |
+| `name` | `string` | Tên slug định danh duy nhất của Skill (kebab-case). |
+| `description` | `string` | Mô tả mục tiêu, bài toán và hoàn cảnh áp dụng Skill (Dùng cho Orchestrator Semantic Matching). |
 | `intentCategory` | `Enum` | Nhóm ý định (`CODE_GEN`, `REQUIREMENTS_REFINEMENT`, `BUG_FIX`, `ARCHITECTURE_DESIGN`, `DOCUMENTATION`, `TESTING`...). |
-| `triggers` | `string[]` | Danh sách các cụm từ khóa kích hoạt (VI/EN) để Orchestrator match ý định người dùng. |
-| `requires` | `object` | Danh sách tài nguyên phụ thuộc (`templates`, `registries`, `astGraphSymbols`) để **Knowledge Agent** nạp chính xác 100% bối cảnh mà 0 tốn token suy đoán. |
+| `intent_triggers` | `string[]` | Danh sách các cụm từ khóa kích hoạt (VI/EN) để Orchestrator match ý định người dùng. |
+| `when_to_use` | `object` | Điều kiện tiền đề (`pre_conditions`) và điều kiện từ chối (`do_not_use_if`) khi định tuyến. |
+| `related_skills` | `array` | Phân biệt ranh giới cốt lõi với các Skill lân cận để tránh Orchestrator gọi nhầm. |
+| `required_contracts` | `string[]` | Danh sách Hợp đồng Dữ liệu sử dụng (`ContextPayloadContract`, `SpecialistResultContract`). |
 
 ---
 
@@ -71,41 +81,58 @@ Thân bài Markdown của file `SKILL.md` hướng dẫn Specialist Agent thực
 ```markdown
 # [Tên Kỹ Năng]
 
+> Skill lo đúng MỘT việc: <...>. Nhận dữ liệu từ `ContextPayloadContract`, xử lý logic. Nếu phát hiện thiếu bối cảnh, BẮT BUỘC gửi yêu cầu truy vấn bổ sung lên **Knowledge Agent**; khi hoàn tất, trả về `SpecialistResultContract` để Gateway kiểm duyệt. KHÔNG tự ý ghi file.
+
 ## Config (Tham số dự án)
-- `{{PROJECT}}` — tên dự án
-- `/docs` — thư mục docs vault
+- `{{PROJECT}}` — Tên dự án
+- `/docs` — Thư mục tài liệu vault
 
-## Mục tiêu
-[Mô tả cụ thể kết quả sản phẩm cần đạt được]
+## 1. Task Mindset & Core Principles (Tư duy & Nguyên tắc Nhiệm vụ)
+- **Góc nhìn thực thi:** [Góc nhìn chuyên môn đặc thù]
+- **Nguyên tắc cốt lõi:** Zero-hallucination, trung thực tuyệt đối.
+- **Ranh giới thực thi:** Nên dùng khi / Không dùng khi.
 
-## Nguyên tắc Cốt lõi
-1. Zero-hallucination (Không tự bịa ý khách/mã nguồn).
-2. [Nguyên tắc chuyên môn 2...]
+## 2. Core Execution Rules (Nguyên tắc Thực thi)
+1. **Gate:** Chỉ tạo Proposed Payload trong RAM.
+2. **Traceability:** Map logic với ID luật nghiệp vụ `[[BR-xxx]]`.
+3. **Bi-directional Knowledge Loop:** Gửi `KnowledgeQueryRequest` lên Knowledge Agent nếu thiếu bối cảnh.
+4. **Degrade Gracefully:** Ghi chú warning vào `openQuestions` thay vì crash luồng.
 
-## Quy trình Tư duy & Các Bước Thực thi
-[Mô tả quy trình từng bước mà Specialist Agent cần tuân theo]
+## 3. Quy trình Xử lý (Reasoning Phases)
+- **Phase 1 — Gather & Analyze:** Phân tích `userPrompt` và `ContextPayloadContract`.
+- **Phase 2 — Synthesize (Tổng hợp):** Thiết kế giải pháp / Viết mã nguồn.
+- **Phase 3 — Self-Audit (Tự kiểm tra):** Đối chiếu với Definition of Done.
+- **Phase 4 — Wrap Contract:** Đóng gói JSON `SpecialistResultContract`.
 
-## Định dạng Đầu ra (Artifact Contract / Output Envelope)
-[BẮT BUỘC: Quy định đóng gói JSON Payload theo chuẩn SpecialistResultContract]
-
-## Tiêu chí Nghiệm thu (Gate Criteria)
+## 4. Definition of Done (Tiêu chuẩn hoàn thành)
 - [ ] Tiêu chí 1
-- [ ] Tiêu chí 2
+- [ ] Đảm bảo toàn bộ nội dung mã nguồn trong trường `content`, `searchString` và `replaceString` phải được escape JSON hợp lệ (ví dụ: biến xuống dòng thành `\n`, escape dấu quote `\"`).
+- [ ] Output tuân thủ 100% JSON Schema `SpecialistResultContract`.
+
+## 5. Contract Binding (Ràng buộc Đầu ra)
 ```
 
 ---
 
 ## 4. Giao ước Đầu ra Chuẩn hóa (Artifact Contract / Output Envelope)
 
-Mọi Skill (dù là Bespoke hay 3rd-party) khi thực thi **BẮT BUỘC** phải yêu cầu Specialist Agent đóng gói sản phẩm đầu ra theo định dạng JSON Envelope chuẩn `SpecialistResultContract` để gửi cho **Gateway 2 (Review QA)**:
+Mọi Skill khi thực thi **BẮT BUỘC** phải yêu cầu Specialist Agent đóng gói sản phẩm đầu ra theo định dạng JSON Envelope chuẩn `SpecialistResultContract` để gửi cho **Gateway 2 (Review QA)**:
 
 ```json
 {
+  "traceId": "<trace_id_từ_context_payload>",
+  "resultId": "<uuid>",
+  "taskId": "<từ_input>",
+  "specialistRole": "BA_AGENT", // BA_AGENT | ARCHITECT_AGENT | CODER_AGENT | DATABASE_AGENT | TESTER_AGENT
   "executionType": "FILE_CREATE", // FILE_CREATE | FILE_MODIFY | FILE_DELETE | CHAT_RESPONSE
   "proposedPayload": [
     {
       "targetPath": "docs/06-Change-Log/CR-YYYY-MMDD-[title].md",
-      "content": "...Nội dung file..."
+      "content": "<Nội_dung_hoàn_chỉnh_đã_escape_JSON: \\n, \\\">",
+      "replacementChunk": {
+        "searchString": "<Nội_dung_cũ_cần_tìm_đã_escape_JSON: \\n, \\\">",
+        "replaceString": "<Nội_dung_mới_đáp_vào_đã_escape_JSON: \\n, \\\">"
+      }
     }
   ],
   "chatMessage": "Thông báo ngắn gọn kết quả cho người dùng trên IDE...",
@@ -132,7 +159,9 @@ Mọi Skill (dù là Bespoke hay 3rd-party) khi thực thi **BẮT BUỘC** ph�
 ## 6. Mẫu Khởi tạo Quick-Start Template
 
 Khi tạo một Skill mới cho hệ thống, hãy tham khảo và copy mẫu chuẩn tại:
-👉 **[`docs/00-Meta/Templates/Template-Skill.md`](file:///d:/Workspace/Projects/AgenticWork/docs/00-Meta/Templates/Template-Skill.md)**
+👉 **[`docs/07-Process/Templates/Template-Skill.md`](file:///d:/Workspace/Projects/AgenticWork/docs/07-Process/Templates/Template-Skill.md)**
+👉 **[`docs/07-Process/skill-template/SKILL.md`](file:///d:/Workspace/Projects/AgenticWork/docs/07-Process/skill-template/SKILL.md)**
 
 ---
+
 *Tài liệu được khởi tạo tự động tại `docs/02-Skill-Specification-Standard.md` và gắn kèm JSON Schema `schemas/skill-manifest.schema.json`.*

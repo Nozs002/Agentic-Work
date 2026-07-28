@@ -138,21 +138,36 @@ export interface SpecialistResultContract extends BaseContract {
   resultId: string;
   taskId: string;
   specialistRole: 'BA_AGENT' | 'ARCHITECT_AGENT' | 'CODER_AGENT' | 'DATABASE_AGENT' | 'TESTER_AGENT';
-  executionType: 'FILE_CREATE' | 'FILE_MODIFY' | 'FILE_DELETE' | 'CHAT_RESPONSE';
-  proposedPayload?: Array<{
-    targetPath: string;
-    content?: string;
-    replacementChunk?: {
-      startLine: number;
-      endLine: number;
-      targetContent: string;
-      replacementContent: string;
-    };
-  }>;
+  executionType: 'FILE_CREATE' | 'FILE_MODIFY' | 'FILE_DELETE' | 'CHAT_RESPONSE' | 'STRUCTURED_RESULT' | 'DOMAIN_RESULT';
+  proposedPayload?: Array<
+    | {
+        targetPath: string;
+        content?: string;
+        replacementChunk?: {
+          searchString: string; // Đoạn text/code cũ cần tìm kiếm và thay thế (bắt buộc escape JSON)
+          replaceString: string; // Đoạn text/code mới đắp vào (bắt buộc escape JSON)
+        };
+      }
+    | {
+        payloadType: string;  // Loại domain payload (Ví dụ: RequirementsInterview, GapAnalysis, RiskAssessment...)
+        payload: Record<string, unknown>; // Dữ liệu nghiệp vụ cấu trúc chi tiết
+      }
+  >;
   chatMessage?: string;
   metadata?: {
     skillUsed?: string;
     affectedModules?: string[];
+    status?: 'DRAFT' | 'READY_FOR_REVIEW' | 'READY_FOR_COMMIT' | 'COMPLETED';
+    version?: number;
+    readinessScore?: number;
+    confidence?: number;
+    missingFields?: string[];
+    interviewProgress?: {
+      progressPercent: number;
+      completedPhases: string[];
+      pendingPhases: string[];
+    };
+    [key: string]: unknown;
   };
 }
 ```
@@ -197,10 +212,8 @@ export interface DiskWriteContract extends BaseContract {
     targetPath: string;
     content?: string;
     replacementChunk?: {
-      startLine: number;
-      endLine: number;
-      targetContent: string;
-      replacementContent: string;
+      searchString: string; // Đoạn text/code cũ cần tìm kiếm và thay thế (bắt buộc escape JSON)
+      replaceString: string; // Đoạn text/code mới đắp vào (bắt buộc escape JSON)
     };
   }>;
   rollbackSnapshot?: Array<{

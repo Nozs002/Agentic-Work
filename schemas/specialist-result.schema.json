@@ -22,39 +22,62 @@
     },
     "executionType": {
       "type": "string",
-      "enum": ["FILE_CREATE", "FILE_MODIFY", "FILE_DELETE", "CHAT_RESPONSE"],
+      "enum": ["FILE_CREATE", "FILE_MODIFY", "FILE_DELETE", "CHAT_RESPONSE", "STRUCTURED_RESULT", "DOMAIN_RESULT"],
       "description": "Loại hành động đầu ra đề xuất"
     },
     "proposedPayload": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["targetPath"],
-        "properties": {
-          "targetPath": {
-            "type": "string",
-            "description": "Đường dẫn file mục tiêu"
-          },
-          "content": {
-            "type": "string",
-            "description": "Nội dung file đầy đủ nếu CREATE hoặc thay đổi hoàn toàn"
-          },
-          "replacementChunk": {
-            "type": "object",
-            "required": ["startLine", "endLine", "targetContent", "replacementContent"],
+        "oneOf": [
+          {
+            "title": "FileActionPayload",
+            "required": ["targetPath"],
             "properties": {
-              "startLine": { "type": "integer", "minimum": 1 },
-              "endLine": { "type": "integer", "minimum": 1 },
-              "targetContent": { "type": "string" },
-              "replacementContent": { "type": "string" }
+              "targetPath": {
+                "type": "string",
+                "description": "Đường dẫn file mục tiêu"
+              },
+              "content": {
+                "type": "string",
+                "description": "Nội dung file đầy đủ nếu CREATE hoặc thay đổi hoàn toàn (Bắt buộc escape JSON hợp lệ: \\n, \\\")"
+              },
+              "replacementChunk": {
+                "type": "object",
+                "required": ["searchString", "replaceString"],
+                "properties": {
+                  "searchString": {
+                    "type": "string",
+                    "description": "Đoạn văn bản/code cũ cần tìm kiếm trong file (Bắt buộc escape JSON hợp lệ: \\n, \\\")"
+                  },
+                  "replaceString": {
+                    "type": "string",
+                    "description": "Đoạn văn bản/code mới dùng để thay thế (Bắt buộc escape JSON hợp lệ: \\n, \\\")"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "title": "GenericDomainPayload",
+            "required": ["payloadType", "payload"],
+            "properties": {
+              "payloadType": {
+                "type": "string",
+                "description": "Loại domain payload (Ví dụ: RequirementsInterview, GapAnalysis, RiskAssessment...)"
+              },
+              "payload": {
+                "type": "object",
+                "description": "Dữ liệu nghiệp vụ cấu trúc chi tiết"
+              }
             }
           }
-        }
+        ]
       }
     },
     "chatMessage": {
       "type": "string",
-      "description": "Nội dung phản hồi trực tiếp cho người dùng nếu executionType là CHAT_RESPONSE"
+      "description": "Nội dung phản hồi trực tiếp cho người dùng"
     },
     "metadata": {
       "type": "object",
@@ -63,8 +86,43 @@
         "affectedModules": {
           "type": "array",
           "items": { "type": "string" }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["DRAFT", "READY_FOR_REVIEW", "READY_FOR_COMMIT", "COMPLETED"],
+          "description": "Trạng thái vòng đời của kết quả"
+        },
+        "version": {
+          "type": "integer",
+          "description": "Phiên bản dữ liệu"
+        },
+        "readinessScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Điểm % độ sẵn sàng hoàn thành (0-100)"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Mức độ tự tin về tính chính xác (0.0-1.0)"
+        },
+        "missingFields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Danh sách các trường/tầng thông tin còn thiếu"
+        },
+        "interviewProgress": {
+          "type": "object",
+          "properties": {
+            "progressPercent": { "type": "number" },
+            "completedPhases": { "type": "array", "items": { "type": "string" } },
+            "pendingPhases": { "type": "array", "items": { "type": "string" } }
+          }
         }
-      }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": false

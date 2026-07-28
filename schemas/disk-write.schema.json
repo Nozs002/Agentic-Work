@@ -38,16 +38,20 @@
           },
           "content": {
             "type": "string",
-            "description": "Nội dung hoàn chỉnh nếu CREATE_FILE hoặc ghi đè"
+            "description": "Nội dung hoàn chỉnh nếu CREATE_FILE hoặc ghi đè (Bắt buộc escape JSON hợp lệ: \\n, \\\")"
           },
           "replacementChunk": {
             "type": "object",
-            "required": ["startLine", "endLine", "targetContent", "replacementContent"],
+            "required": ["searchString", "replaceString"],
             "properties": {
-              "startLine": { "type": "integer", "minimum": 1 },
-              "endLine": { "type": "integer", "minimum": 1 },
-              "targetContent": { "type": "string" },
-              "replacementContent": { "type": "string" }
+              "searchString": {
+                "type": "string",
+                "description": "Đoạn văn bản/code cũ cần tìm kiếm trong file (Bắt buộc escape JSON hợp lệ: \\n, \\\")"
+              },
+              "replaceString": {
+                "type": "string",
+                "description": "Đoạn văn bản/code mới dùng để thay thế (Bắt buộc escape JSON hợp lệ: \\n, \\\")"
+              }
             }
           }
         }

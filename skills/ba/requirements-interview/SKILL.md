@@ -1,17 +1,17 @@
 ---
 name: requirements-interview
-description: >
-  PHỎNG VẤN YÊU CẦU kiểu Socratic ("Deep Interview") để LÀM RÕ một yêu cầu/Change Request
-  TRƯỚC KHI viết spec — chống pain "yêu cầu mơ hồ của khách → viết spec sai →
-  làm lại". Skill HỎI người dùng (BA) theo từng tầng (Problem → Actors → Current → Expected →
-  Scope → Edge cases → Data/fields → Modules ảnh hưởng → Acceptance → Priority/deadline →
-  Open questions), đào "vì sao" nhiều lớp, gom câu hỏi bằng AskUserQuestion, có CHẾ ĐỘ
-  brainstorming (phân kỳ → hội tụ) khi yêu cầu còn lờ mờ, và TUYỆT ĐỐI không bịa ý khách:
-  cái gì chưa chắc thì ghi thành OPEN QUESTION để xác nhận lại với stakeholder. Đầu ra: một
-  bản Change Request nháp ĐÚNG template vault + danh sách câu hỏi gửi khách, sẵn sàng bàn giao
-  cho module-documentation (viết spec) và jira-integration (tạo task).
+type: skill
 intentCategory: REQUIREMENTS_REFINEMENT
-triggers:
+description: >
+  PHỎNG VẤN YÊU CẦU kiểu Socratic ("Deep Interview") để LÀM RÕ một yêu cầu/ý tưởng mơ hồ
+  TRƯỚC KHI chuyển sang công đoạn soạn spec/tài liệu — chống pain "yêu cầu mơ hồ → viết spec sai → làm lại".
+  Skill HỎI người dùng (BA/Stakeholder) theo từng tầng thông tin (Problem → Actors → Current → Expected →
+  Scope → Edge cases → Data/fields → Affected Modules → Acceptance → Priority/deadline → Open questions),
+  đào sâu "vì sao", gom câu hỏi bằng AskUserQuestion, hỗ trợ chế độ Brainstorming, và TUYỆT ĐỐI không bịa ý khách.
+  Đầu ra: Dữ liệu Yêu cầu Cấu trúc (payloadType: "RequirementsInterview") kèm tiến độ phỏng vấn,
+  điểm sẵn sàng (readinessScore) và câu hỏi tiếp theo, đóng gói qua SpecialistResultContract.
+target_agent: BA_AGENT
+intent_triggers:
   - "làm rõ yêu cầu này"
   - "phỏng vấn yêu cầu"
   - "khách muốn X nhưng chưa rõ"
@@ -22,97 +22,132 @@ triggers:
   - "elicit requirements"
   - "requirements interview"
 
-requires:
-  templates:
-    - "docs/00-Meta/Templates/Template-Change-Request.md"
-  registries:
-    - "docs/00-INDEX.md"
+# Điều kiện Kích hoạt & Ranh giới Sử dụng (Orchestrator Routing)
+when_to_use:
+  pre_conditions:
+    - "Yêu cầu người dùng hoặc ý tưởng mới còn mơ hồ, chưa rõ scope, business rules hoặc edge cases"
+  do_not_use_if:
+    - "Yêu cầu đã cực kỳ đầy đủ thông tin và rành mạch → Chuyển trực tiếp sang skill module-documentation"
+
+# Phân biệt Ranh giới với các Skill khác
+related_skills:
+
+required_contracts: ["ContextPayloadContract", "SpecialistResultContract"]
+tags: ["ba", "requirements", "interview", "socratic", "elicit"]
 ---
 
-# Requirements Interview — Phỏng vấn yêu cầu kiểu Socratic
+# Requirements Interview — Phỏng vấn Yêu cầu kiểu Socratic
 
-## Config (điền khi áp vào dự án)
-- `{{PROJECT}}` — tên dự án
-- `/docs` — thư mục docs vault
-- `{{LANG_PRIMARY}}` / `{{LANG_SECONDARY}}` — ngôn ngữ (mặc định VI + EN)
+> Skill lo đúng MỘT việc: Phỏng vấn nghiệp vụ Socratic để đào sâu và làm rõ các khía cạnh của yêu cầu mơ hồ thành **Dữ liệu Yêu cầu Cấu trúc (Generic Domain Payload)**. KHÔNG tự ý tạo/sửa file đĩa, KHÔNG chỉ định đường dẫn lưu trữ Vault, KHÔNG đảm nhận định dạng tài liệu hay điều phối luồng công việc. Nhận dữ liệu từ `ContextPayloadContract`, xử lý logic phỏng vấn, báo cáo dữ liệu nghiệp vụ + trạng thái tiến độ + điểm sẵn sàng qua `SpecialistResultContract` để Gateway/Orchestrator kiểm duyệt và điều phối.
 
-## Mục tiêu
-Biến một yêu cầu mơ hồ thành **một Change Request đủ rõ để viết spec**, bằng cách **HỎI người dùng (BA) theo tầng** thay vì đoán. Không viết spec ở đây — chỉ làm rõ và đóng gói thành CR nháp + danh sách câu hỏi cần xác nhận.
+## Config (Tham số dự án)
+- `{{PROJECT}}` — Tên dự án
+- `{{LANG_PRIMARY}}` / `{{LANG_SECONDARY}}` — Ngôn ngữ xử lý (mặc định VI + EN)
 
-## Nguyên tắc cốt lõi (đọc trước mỗi lần dùng)
-1. **Zero-hallucination — không bịa ý khách.** Mọi điều CHƯA được người dùng/khách xác nhận đều phải ghi vào mục **OPEN QUESTIONS**, không được viết như sự thật trong CR. Trích nguồn khi có (biên bản họp, message, ticket).
-2. **Hỏi từng tầng, không dồn một lúc.** Mỗi lượt hỏi 1 nhóm chủ đề; xác nhận hiểu đúng rồi mới sang nhóm kế. Dùng `AskUserQuestion` để gom 2–4 lựa chọn khi câu hỏi có phương án rõ; hỏi mở (text) khi cần mô tả.
-3. **Đào "vì sao" nhiều lớp (Phân biệt Problem vs Solution).** Stakeholder thường nói ra *giải pháp họ nghĩ sẵn* thay vì *vấn đề của họ* (Ví dụ: khách bảo *"Anh cần export Excel báo cáo hàng ngày"* $\rightarrow$ thực ra pain-point là *"muốn gửi mail cho sếp mỗi sáng"*). Nhiệm vụ của BA KHÔNG PHẢI là ghi lại giải pháp bề nổi, mà là đào đủ sâu để tìm ra nỗi đau (pain-point) thực sự.
-4. **Chống Solution Jumping (Dùng khi yêu cầu còn lờ mờ / Dự án mới):** Khi nhận một yêu cầu (như *"Em muốn thêm field này trong form"* $\rightarrow$ thực ra họ muốn không phải mở Excel check lại), KHÔNG nhảy ngay vào thiết kế hay ghi nhận giải pháp. Bắt buộc phải lùi lại 1 bước làm rõ: *"Vấn đề thực sự gốc rễ họ đang gặp là gì?"* trước khi chốt phương án.
-5. **Cân bằng Tốc độ vs Chất lượng (Tôn trọng chuyên gia & Biết khi nào DỪNG ĐÀO):**
-   - **Tôn trọng chuyên gia vận hành:** Không mặc định phủ nhận giải pháp của khách. Phân biệt được: giải pháp từ kinh nghiệm lâu năm (cần xác nhận nhanh) vs giải pháp bắt chước/nghĩ nhất thời (cần đào sâu).
-   - **Tránh Analysis Paralysis (Tê liệt vì phân tích):** Không sa vào việc gạn hỏi quá đà. Ngay khi thông tin đạt đủ **Tiêu chí Gate (Problem + Expected Behavior + Scope rành mạch)**, lập tức DỪNG HỎI và chốt nháp CR để không làm trễ tiến độ dự án.
+## 1. Task Mindset & Core Principles (Tư duy & Nguyên tắc Nhiệm vụ)
+- **Góc nhìn thực thi:** Phỏng vấn kiểu Socratic ("Deep Interview") — đào "vì sao" nhiều lớp, đóng vai BA sắc bén nhưng tôn trọng chuyên gia vận hành.
+- **Nguyên tắc cốt lõi:**
+  1. **Zero-hallucination — Không bịa ý khách:** Mọi điều CHƯA được xác nhận đều phải thuộc `openQuestions` (chờ hỏi khách) hoặc `nextQuestions` (chờ phỏng vấn tiếp), KHÔNG khẳng định như sự thật.
+  2. **Hỏi từng tầng, không dồn một lúc:** Mỗi lượt hỏi 1 nhóm chủ đề; xác nhận hiểu đúng rồi mới sang nhóm kế. Dùng `AskUserQuestion` để gom 2–4 lựa chọn khi câu hỏi có phương án rõ; hỏi mở (text) khi cần mô tả.
+  3. **Đào "vì sao" nhiều lớp (Phân biệt Problem vs Solution):** Stakeholder thường nói ra *giải pháp họ nghĩ sẵn* thay vì *vấn đề của họ*. Nhiệm vụ của BA KHÔNG PHẢI là ghi lại giải pháp bề nổi, mà là đào đủ sâu để tìm ra nỗi đau thực sự.
+  4. **Chống Solution Jumping:** Khi nhận một yêu cầu (như *"Em muốn thêm field này trong form"*), KHÔNG nhảy ngay vào thiết kế. Bắt buộc phải lùi lại 1 bước làm rõ: *"Vấn đề thực sự gốc rễ họ đang gặp là gì?"*.
+  5. **Báo cáo trung thực, không tự quyết định Gate:** BA Agent chỉ thống kê thông tin thu thập được, danh sách `missingFields`, điểm `readinessScore` và `confidence`. Quyết định dừng hay chuyển bước thuộc về **Orchestrator / Gateway**.
 
-## Hai chế độ — tự nhận diện
-- **Chế độ A — CLARIFY (mặc định):** yêu cầu đã có hình hài, chỉ thiếu chi tiết → chạy thẳng khung 11 câu bên dưới.
-- **Chế độ B — BRAINSTORM:** yêu cầu còn lờ mờ / "muốn cải thiện X mà chưa biết cách" → **phân kỳ trước, hội tụ sau**:
-  1. Làm rõ *problem* và *mục tiêu thành công* (đo bằng gì?).
-  2. Đề xuất 2–4 hướng giải pháp (kèm trade-off ngắn), trình bày qua `AskUserQuestion` để người dùng chọn/loại.
-  3. Khi đã chốt 1 hướng → chuyển sang Chế độ A để làm rõ chi tiết hướng đó.
+- **Ranh giới thực thi (Scope Boundaries):**
+  - **Phạm vi của skill:** Phỏng vấn, gợi mở, đào sâu, tóm tắt thông tin nghiệp vụ, đo lường tiến độ phỏng vấn.
+  - **NGOÀI phạm vi (Thuộc trách nhiệm của Agent/Skill khác):**
+    - ❌ *Không quyết định vị trí/đường dẫn lưu trữ file Vault* (Thuộc về Documentation Agent / Knowledge Writer).
+    - ❌ *Không định dạng tài liệu Markdown / BRD / CR* (Thuộc về Documentation Agent).
+    - ❌ *Không tự quyết định chuyển bước hay kết thúc luồng* (Thuộc về Orchestrator / Workflow Engine).
+    - ❌ *Không tự đánh giá đậu/rớt Definition of Done* (Thuộc về Gateway / Reviewer).
 
-## Khung phỏng vấn 11 tầng (Chế độ A)
-Hỏi theo thứ tự, mỗi tầng là một lượt (gộp tầng nhỏ nếu người dùng trả lời nhanh):
+## 2. Core Execution Rules (Nguyên tắc Thực thi)
+1. **Pure Elicitation & Reporting:** Thu thập thông tin và báo cáo chỉ số khách quan (`readinessScore`, `confidence`, `missingFields`).
+2. **Generic Payload Envelope:** Đóng gói kết quả dưới dạng `payloadType: "RequirementsInterview"` trong `proposedPayload`.
+3. **Decoupled ExecutionType:** Sử dụng `executionType: "STRUCTURED_RESULT"` để Gateway nhận diện đây là dữ liệu nghiệp vụ có cấu trúc.
+4. **Truy vết Tri thức (Traceability):** Trích dẫn ID luật nghiệp vụ hoặc file tham chiếu (VD: `[[BR-SALE-001]]` hoặc `[[module]]`) khi được cung cấp.
+5. **Bi-directional Knowledge Loop:** Nếu phát hiện thiếu thông tin module hay luật nghiệp vụ trong `ContextPayloadContract`, gửi yêu cầu truy vấn bổ sung (`KnowledgeQueryRequest`) lên Knowledge Agent.
 
-1. **Problem** — Vấn đề thực sự là gì? Ai đau? Hiện tại họ xoay xở ra sao (workaround)?
-2. **Actors / Roles** — Ai dùng tính năng này? (role nào trong hệ thống). Ai bị ảnh hưởng gián tiếp?
-3. **Current behavior** — Hệ thống HIỆN TẠI làm gì ở chỗ này? (màn hình/nút/luồng cụ thể). Nếu không rõ → OPEN QUESTION hoặc đề xuất kiểm chứng bằng app.
-4. **Expected behavior** — Sau thay đổi, hệ thống PHẢI làm gì? Mô tả luồng bước-một.
-5. **Scope & boundaries** — Cái gì NẰM TRONG, cái gì NGOÀI phạm vi lần này? (chặn scope creep).
-6. **Edge cases & lỗi** — Trường hợp rỗng/biên/đồng thời/quyền hạn/offline? Báo lỗi ra sao?
-7. **Data & fields** — Field nào thêm/sửa/bỏ? Kiểu dữ liệu, bắt buộc?, validate?, giá trị mặc định? Công thức tính (nếu có)?
-8. **Modules / màn hình ảnh hưởng** — Đụng module nào trong vault? (đối chiếu `_registry/module-registry` & `02-modules/_MODULE-MAP`). FE/BE/Mobile có liên quan?
-9. **Acceptance criteria** — Làm sao biết là XONG ĐÚNG? Viết dạng Given/When/Then hoặc checklist nghiệm thu.
-10. **Priority & deadline** — Mức ưu tiên? Hạn? Phụ thuộc việc/khác ai?
-11. **Open questions** — Mọi điều còn mơ hồ → gom thành danh sách câu hỏi gửi stakeholder.
+## 3. Quy trình Xử lý (Reasoning Phases)
 
-> Mỗi tầng: nếu người dùng không chắc → KHÔNG tự điền; đánh dấu `⚠️ cần xác nhận với Khách hàng` và đẩy vào OPEN QUESTIONS.
+### Phase 1 — Gather & Analyze (Tự động nhận diện Chế độ & Tra cứu Context)
+- Phân tích `userPrompt` và kiểm tra bối cảnh trong `ContextPayloadContract`. Nếu thiếu thông tin module/tài liệu liên quan, gửi `KnowledgeQueryRequest` lên Knowledge Agent.
+- Nhận diện chế độ phỏng vấn phù hợp:
+  - **Chế độ A — CLARIFY (Mặc định):** Yêu cầu đã có hình hài, chỉ thiếu chi tiết $\rightarrow$ Phỏng vấn theo Khung 11 tầng.
+  - **Chế độ B — BRAINSTORM:** Yêu cầu còn lờ mờ $\rightarrow$ Đề xuất 2–4 hướng kèm trade-off trước, hội tụ sau bằng `AskUserQuestion`.
 
-## Quy trình
-1. **Nhận diện chế độ** (A/B) và nhận diện đây là CR mới hay bổ sung CR cũ.
-2. **(Nếu có nguồn) Tra cứu bối cảnh trước khi hỏi:** Chủ động đọc các tài liệu liên quan trong `/docs` để không hỏi lại những gì đã ghi nhận. Luôn trích dẫn nguồn khi dẫn lại thông tin.
-3. **Phỏng vấn theo khung** (A) hoặc phân kỳ→hội tụ (B). Một nhóm chủ đề / lượt.
-4. **Soạn CR nháp** theo ĐÚNG tệp Template-Change-Request.md trong `00-Meta/Templates` (KHÔNG tự chế format mới). Điền những gì đã xác nhận; phần chưa chắc để ở OPEN QUESTIONS.
-5. **Xuất 2 đầu ra:**
-   - **A) Change Request nháp** (markdown, lưu vào nơi quy ước của vault, liên kết `[[module]]`).
-   - **B) Danh sách câu hỏi gửi Khách hàng** (song ngữ `{{LANG_PRIMARY}}` + `{{LANG_SECONDARY}}`, đánh số, ngắn gọn để khách trả lời nhanh).
-6. **Bàn giao:** gợi ý bước kế tiếp — `module-documentation` (viết spec đầy đủ) khi CR đã đủ rõ.
+### Phase 2 — Synthesize (Thực hiện Phỏng vấn theo Khung 11 tầng)
+Hỏi theo thứ tự, gộp các tầng nhỏ nếu người dùng trả lời nhanh:
+1. **Problem:** Vấn đề thực sự là gì? Ai đau? Workaround hiện tại?
+2. **Actors / Roles:** Ai dùng tính năng này? Role nào trong hệ thống?
+3. **Current behavior:** Hệ thống HIỆN TẠI làm gì ở chỗ này?
+4. **Expected behavior:** Sau thay đổi, hệ thống PHẢI làm gì?
+5. **Scope & boundaries:** `scopeIn` (NẰM TRONG) và `scopeOut` (NGOÀI phạm vi)?
+6. **Edge cases & lỗi:** Trường hợp rỗng/biên/đồng thời/quyền hạn/offline?
+7. **Data & fields:** Field nào thêm/sửa/bỏ? Kiểu dữ liệu, validate, công thức tính?
+8. **Modules ảnh hưởng:** Đụng module nào trong hệ thống?
+9. **Acceptance criteria:** Tiêu chí nghiệm thu (Given/When/Then hoặc checklist).
+10. **Priority & deadline:** Mức ưu tiên? Hạn hoàn thành? Phụ thuộc việc khác?
+11. **Open questions vs Next questions:** Tách biệt điểm chưa xác minh với khách vs câu hỏi phỏng vấn lượt kế.
 
-## Định dạng Đầu ra (Artifact Contract / Output Envelope)
-BA Agent bắt buộc đóng gói kết quả theo chuẩn `SpecialistResultContract` (Output Envelope) để gửi tới Gateway 2 (Review QA) kiểm duyệt trước khi Action Agent lưu file:
+### Phase 3 — Metrics Calculation (Tính toán Chỉ số Tiến độ)
+- Thống kê danh sách các trường thông tin còn thiếu (`missingFields`).
+- Tính điểm sẵn sàng (`readinessScore` từ 0 – 100) và độ tin cậy (`confidence` từ 0.0 – 1.0).
+- Cập nhật tiến độ `interviewProgress` (phần trăm hoàn thành, danh sách tầng đã xong / đang chờ).
+
+### Phase 4 — Wrap Contract (Đóng gói Payload)
+Đóng gói dữ liệu thu thập được theo chuẩn Generic Domain Payload Envelope (`payloadType`, `payload`, `metadata`).
+
+## 4. Báo cáo Chỉ số Chất lượng (Metrics for Gateway/Orchestrator)
+BA Agent cung cấp các chỉ số để Gateway và Orchestrator đưa ra quyết định:
+- **`status`**: `DRAFT` (Đang phỏng vấn) | `READY_FOR_REVIEW` (Đã thu thập đủ các tầng cốt lõi) | `READY_FOR_COMMIT` (Đã được xác nhận hoàn toàn).
+- **`readinessScore`**: Điểm % hoàn thành các tầng thông tin (0 - 100).
+- **`confidence`**: Độ tự tin của BA về tính chính xác và không mâu thuẫn của thông tin (0.0 - 1.0).
+- **`missingFields`**: Mảng liệt kê các tầng thông tin còn thiếu.
+- **`interviewProgress`**: Thông tin chi tiết các phase đã hoàn thành và đang chờ.
+
+## 5. Contract Binding (Ràng buộc Đầu ra)
+BA Agent đóng gói kết quả theo chuẩn Generic Domain Payload (`SpecialistResultContract`):
 
 ```json
 {
-  "executionType": "FILE_CREATE",
+  "resultId": "<uuid>",
+  "taskId": "<từ_input>",
+  "specialistRole": "BA_AGENT",
+  "executionType": "STRUCTURED_RESULT",
   "proposedPayload": [
     {
-      "targetPath": "docs/06-Change-Log/CR-YYYY-MMDD-[ten-cr].md",
-      "content": "...Nội dung Change Request đúng chuẩn Template-Change-Request.md..."
+      "payloadType": "RequirementsInterview",
+      "payload": {
+        "problem": "<Vấn_đề_gốc_rễ>",
+        "actors": ["<Role_1>", "<Role_2>"],
+        "currentBehavior": "<Hành_vi_hệ_thống_hiện_tại>",
+        "expectedBehavior": "<Hành_vi_kỳ_vọng_mới>",
+        "scopeIn": ["<Tính_năng_nam_trong_scope>"],
+        "scopeOut": ["<Tính_năng_nam_ngoai_scope>"],
+        "edgeCases": ["<Các_trường_hợp_biên_va_lỗi>"],
+        "dataFields": ["<Field_du_lieu_can_them_sua_xoa>"],
+        "affectedModules": ["<MODULE_NAME>"],
+        "acceptanceCriteria": ["<Tieu_chi_nghiem_thu>"],
+        "priorityDeadline": "<Muc_uu_tien_va_deadline>",
+        "openQuestions": ["<Điểm_chưa_xác_minh_với_khách_hàng>"],
+        "nextQuestions": ["<Câu_hỏi_BA_sẽ_hỏi_người_dùng_lượt_tiếp_theo>"]
+      }
     }
   ],
-  "chatMessage": "Đã hoàn thành phỏng vấn và tạo bản nháp CR. Dưới đây là danh sách câu hỏi cần xác nhận thêm với Khách hàng...",
+  "chatMessage": "Đã hoàn thành lượt phỏng vấn. Tỷ lệ hoàn thành: 72% (Readiness Score: 72). Dưới đây là tóm tắt dữ liệu đã thu thập và câu hỏi lượt tiếp theo...",
   "metadata": {
     "skillUsed": "requirements-interview",
-    "affectedModules": ["SALE", "CRM"]
+    "status": "DRAFT",
+    "version": 1,
+    "readinessScore": 72,
+    "confidence": 0.85,
+    "missingFields": ["Acceptance Criteria", "Edge Cases"],
+    "interviewProgress": {
+      "progressPercent": 72,
+      "completedPhases": ["Problem", "Actors", "Current Behavior", "Expected Behavior", "Scope"],
+      "pendingPhases": ["Edge Cases", "Data Fields", "Acceptance Criteria"]
+    }
   }
 }
 ```
-
-## Ghi chú model-routing & token (tùy chọn, để tiết kiệm)
-- Việc **suy luận/đào sâu/soạn CR** → giữ model mạnh cho chất lượng.
-- Việc **máy móc** (đổi định dạng, dịch song ngữ, gom danh sách) → có thể hạ model hoặc giao subagent rẻ hơn nếu muốn tiết kiệm; với phiên tương tác bình thường thì không cần.
-- Giữ phỏng vấn **gọn**: hỏi đúng cái thiếu, không lặp lại cái người dùng đã trả lời (đỡ tốn context).
-
-## Tiêu chí "đủ rõ để viết spec" (gate trước khi bàn giao)
-- [ ] Problem + Expected behavior rõ ràng, không mâu thuẫn.
-- [ ] Scope đóng (in/out rành mạch).
-- [ ] Field & edge case chính đã liệt kê.
-- [ ] Module ảnh hưởng đã map.
-- [ ] Acceptance criteria kiểm chứng được.
-- [ ] OPEN QUESTIONS đã tách riêng, không lẫn vào phần khẳng định.
-
-Nếu chưa đạt gate → nói rõ còn thiếu gì, đừng bàn giao sang viết spec.
