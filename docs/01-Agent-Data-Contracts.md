@@ -159,9 +159,15 @@ export interface SpecialistResultContract extends BaseContract {
     affectedModules?: string[];
     status?: 'DRAFT' | 'READY_FOR_REVIEW' | 'READY_FOR_COMMIT' | 'COMPLETED';
     version?: number;
+    readiness?: {
+      score: number;
+      isReady: boolean;
+      definitionOfDoneMet: boolean;
+    };
     readinessScore?: number;
     confidence?: number;
     missingFields?: string[];
+    nextRecommendation?: 'ASK_MORE' | 'DOCUMENTATION' | 'BUSINESS_ANALYSIS' | 'FEATURE_SPEC' | 'CHANGE_REQUEST';
     interviewProgress?: {
       progressPercent: number;
       completedPhases: string[];

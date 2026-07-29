@@ -96,6 +96,15 @@
           "type": "integer",
           "description": "Phiên bản dữ liệu"
         },
+        "readiness": {
+          "type": "object",
+          "properties": {
+            "score": { "type": "number", "minimum": 0, "maximum": 100 },
+            "isReady": { "type": "boolean" },
+            "definitionOfDoneMet": { "type": "boolean" }
+          },
+          "description": "Đánh giá mức độ sẵn sàng theo Definition of Done"
+        },
         "readinessScore": {
           "type": "number",
           "minimum": 0,
@@ -112,6 +121,11 @@
           "type": "array",
           "items": { "type": "string" },
           "description": "Danh sách các trường/tầng thông tin còn thiếu"
+        },
+        "nextRecommendation": {
+          "type": "string",
+          "enum": ["ASK_MORE", "DOCUMENTATION", "BUSINESS_ANALYSIS", "FEATURE_SPEC", "CHANGE_REQUEST"],
+          "description": "Gợi ý bước tiếp theo cho Orchestrator"
         },
         "interviewProgress": {
           "type": "object",
