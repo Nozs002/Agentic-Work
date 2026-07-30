@@ -4,11 +4,34 @@
   "title": "ContextPayloadContract",
   "description": "Hợp đồng Dữ liệu Ngữ cảnh do Knowledge Agent bóc tách và tối ưu từ Code AST Graph và Business Rules Vault",
   "type": "object",
-  "required": ["traceId", "contextId", "dagId", "timestamp", "tokenMetrics", "subgraphs", "businessRules"],
+  "allOf": [
+    { "$ref": "base-contract.schema.json" }
+  ],
+  "required": ["contextId", "dagId", "tokenMetrics", "subgraphs", "businessRules"],
   "properties": {
     "traceId": {
       "type": "string",
       "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
+    },
+    "workflowId": {
+      "type": "string",
+      "description": "Mã định danh luồng công việc cụ thể"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fromAgent": {
+      "type": "string",
+      "description": "Định danh Agent phát tạo gói tin"
+    },
+    "toAgent": {
+      "type": "string",
+      "description": "Định danh Agent đích nhận gói tin"
+    },
+    "contractType": {
+      "type": "string",
+      "description": "Loại Hợp đồng Dữ liệu (CONTEXT_PAYLOAD)"
     },
     "contextId": {
       "type": "string",
@@ -17,10 +40,6 @@
     "dagId": {
       "type": "string",
       "description": "Mã DAG tương ứng"
-    },
-    "timestamp": {
-      "type": "string",
-      "format": "date-time"
     },
     "tokenMetrics": {
       "type": "object",

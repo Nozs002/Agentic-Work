@@ -2,13 +2,37 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://agenticwork.io/schemas/specialist-result.schema.json",
   "title": "SpecialistResultContract",
-  "description": "Phong bì Đầu ra Chuẩn hóa (Output Envelope) do Specialist Agents sinh ra trong RAM gửi tới GW2",
+  "description": "Phong bì Vận chuyển Hạ tầng (Transport Envelope) do Agent Output Adapter đóng gói từ Domain Model để gửi tới Gateway 2 & Action Agent",
   "type": "object",
-  "required": ["traceId", "resultId", "taskId", "specialistRole", "executionType"],
+  "allOf": [
+    { "$ref": "base-contract.schema.json" }
+  ],
+  "required": ["resultId", "taskId", "specialistRole", "executionType"],
   "properties": {
     "traceId": {
       "type": "string",
       "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
+    },
+    "workflowId": {
+      "type": "string",
+      "description": "Mã định danh luồng công việc cụ thể"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Thời điểm khởi tạo gói tin (ISO 8601)"
+    },
+    "fromAgent": {
+      "type": "string",
+      "description": "Định danh Agent phát tạo gói tin"
+    },
+    "toAgent": {
+      "type": "string",
+      "description": "Định danh Agent đích nhận gói tin"
+    },
+    "contractType": {
+      "type": "string",
+      "description": "Loại Hợp đồng Dữ liệu (SPECIALIST_RESULT)"
     },
     "resultId": {
       "type": "string"
@@ -23,10 +47,15 @@
     "executionType": {
       "type": "string",
       "enum": ["FILE_CREATE", "FILE_MODIFY", "FILE_DELETE", "CHAT_RESPONSE"],
-      "description": "Loại hành động đầu ra đề xuất"
+      "description": "Loại hành động đầu ra hạ tầng đề xuất"
+    },
+    "domainPayload": {
+      "type": "object",
+      "description": "Dữ liệu Domain Model gốc thuần túy do Skill/Agent sinh ra (RequirementAnalysis, GeneratedCode, TestPlan...)"
     },
     "proposedPayload": {
       "type": "array",
+      "description": "Dữ liệu thao tác file/đĩa đã qua Agent Output Adapter chuyển đổi từ domainPayload",
       "items": {
         "type": "object",
         "required": ["targetPath"],

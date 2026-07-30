@@ -4,21 +4,40 @@
   "title": "PolicyVerificationContract",
   "description": "Hợp đồng Dữ liệu Kết quả Kiểm duyệt Chính sách Tiền thực thi (Gateway 1 Policy Engine)",
   "type": "object",
-  "required": ["traceId", "verificationId", "dagId", "timestamp", "status", "conflicts"],
+  "allOf": [
+    { "$ref": "base-contract.schema.json" }
+  ],
+  "required": ["verificationId", "dagId", "status", "conflicts"],
   "properties": {
     "traceId": {
       "type": "string",
       "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
+    },
+    "workflowId": {
+      "type": "string",
+      "description": "Mã định danh luồng công việc cụ thể"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fromAgent": {
+      "type": "string",
+      "description": "Định danh Agent phát tạo gói tin"
+    },
+    "toAgent": {
+      "type": "string",
+      "description": "Định danh Agent đích nhận gói tin"
+    },
+    "contractType": {
+      "type": "string",
+      "description": "Loại Hợp đồng Dữ liệu (POLICY_VERIFICATION)"
     },
     "verificationId": {
       "type": "string"
     },
     "dagId": {
       "type": "string"
-    },
-    "timestamp": {
-      "type": "string",
-      "format": "date-time"
     },
     "status": {
       "type": "string",

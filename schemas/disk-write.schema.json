@@ -4,19 +4,38 @@
   "title": "DiskWriteContract",
   "description": "Hợp đồng Dữ liệu Thực thi Ghi Ổ đĩa Thuần túy cho File System Agent và Git Agent",
   "type": "object",
-  "required": ["traceId", "operationId", "timestamp", "qaSignature", "operations"],
+  "allOf": [
+    { "$ref": "base-contract.schema.json" }
+  ],
+  "required": ["operationId", "qaSignature", "operations"],
   "properties": {
     "traceId": {
       "type": "string",
       "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
     },
-    "operationId": {
+    "workflowId": {
       "type": "string",
-      "description": "Mã định danh phiên ghi đĩa"
+      "description": "Mã định danh luồng công việc cụ thể"
     },
     "timestamp": {
       "type": "string",
       "format": "date-time"
+    },
+    "fromAgent": {
+      "type": "string",
+      "description": "Định danh Agent phát tạo gói tin"
+    },
+    "toAgent": {
+      "type": "string",
+      "description": "Định danh Agent đích nhận gói tin"
+    },
+    "contractType": {
+      "type": "string",
+      "description": "Loại Hợp đồng Dữ liệu (DISK_WRITE)"
+    },
+    "operationId": {
+      "type": "string",
+      "description": "Mã định danh phiên ghi đĩa"
     },
     "qaSignature": {
       "type": "string",

@@ -4,19 +4,38 @@
   "title": "TaskDAGContract",
   "description": "Hợp đồng Dữ liệu Đồ thị Công việc (Task DAG) do Planner Agent rã từ Prompt người dùng",
   "type": "object",
-  "required": ["traceId", "dagId", "timestamp", "intentCategory", "tasks"],
+  "allOf": [
+    { "$ref": "base-contract.schema.json" }
+  ],
+  "required": ["dagId", "intentCategory", "tasks"],
   "properties": {
     "traceId": {
       "type": "string",
       "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request từ IDE đến lúc ghi đĩa"
     },
-    "dagId": {
+    "workflowId": {
       "type": "string",
-      "description": "Mã định danh duy nhất của Task DAG"
+      "description": "Mã định danh luồng công việc cụ thể"
     },
     "timestamp": {
       "type": "string",
       "format": "date-time"
+    },
+    "fromAgent": {
+      "type": "string",
+      "description": "Định danh Agent phát tạo gói tin"
+    },
+    "toAgent": {
+      "type": "string",
+      "description": "Định danh Agent đích nhận gói tin"
+    },
+    "contractType": {
+      "type": "string",
+      "description": "Loại Hợp đồng Dữ liệu (TASK_DAG)"
+    },
+    "dagId": {
+      "type": "string",
+      "description": "Mã định danh duy nhất của Task DAG"
     },
     "userPrompt": {
       "type": "string",

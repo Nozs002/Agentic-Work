@@ -28,12 +28,19 @@ flowchart LR
 
 ## 2. Hợp đồng Cơ sở (Base Contract)
 
-Mọi Data Contract giữa các Agent đều phải mở rộng (extend) từ `BaseContract` sau:
+*   **JSON Schema:** [`schemas/base-contract.schema.json`](file:///d:/Workspace/Projects/AgenticWork/schemas/base-contract.schema.json)
+*   **Mục đích:** Khai báo các thuộc tính hệ thống cốt lõi bắt buộc (`traceId`, `timestamp`, `fromAgent`, `contractType`) mà tất cả 6 Hợp đồng Dữ liệu đều kế thừa thông qua `allOf`.
+
+Mọi Data Contract giữa các Agent đều mở rộng (extend) từ `BaseContract` sau:
 
 ```typescript
 export interface BaseContract {
-  traceId: string;   // Unique ID xuyên suốt 1 vòng đời request từ IDE đến Disk
-  timestamp: string; // Thời điểm khởi tạo gói tin (ISO 8601)
+  traceId: string;      // Unique ID xuyên suốt 1 vòng đời request từ IDE đến Disk
+  workflowId?: string;  // Unique ID của luồng quy trình công việc (nếu có)
+  timestamp: string;    // Thời điểm khởi tạo gói tin (ISO 8601)
+  fromAgent: 'USER_IDE' | 'PLANNER_AGENT' | 'KNOWLEDGE_AGENT' | 'GW1_POLICY_ENGINE' | 'BA_AGENT' | 'ARCHITECT_AGENT' | 'CODER_AGENT' | 'DATABASE_AGENT' | 'TESTER_AGENT' | 'GW2_REVIEW_QA' | 'FILE_SYSTEM_AGENT' | 'GIT_AGENT' | 'ORCHESTRATOR'; // Nguồn phát tạo
+  toAgent?: 'USER_IDE' | 'PLANNER_AGENT' | 'KNOWLEDGE_AGENT' | 'GW1_POLICY_ENGINE' | 'BA_AGENT' | 'ARCHITECT_AGENT' | 'CODER_AGENT' | 'DATABASE_AGENT' | 'TESTER_AGENT' | 'GW2_REVIEW_QA' | 'FILE_SYSTEM_AGENT' | 'GIT_AGENT' | 'ORCHESTRATOR';   // Đích nhận (mặc định ORCHESTRATOR)
+  contractType: 'TASK_DAG' | 'CONTEXT_PAYLOAD' | 'POLICY_VERIFICATION' | 'SPECIALIST_RESULT' | 'REVIEW_QA' | 'DISK_WRITE'; // Phân loại gói tin để Orchestrator chuyển giao State Machine
 }
 ```
 
@@ -129,9 +136,9 @@ export interface PolicyVerificationContract extends BaseContract {
 
 ---
 
-### 📌 3.4 `SpecialistResultContract` (Specialist Agents $\rightarrow$ Gateway 2 Review QA)
+### 📌 3.4 `SpecialistResultContract` (Agent Output Adapter $\rightarrow$ Gateway 2 Review QA)
 *   **JSON Schema:** [`schemas/specialist-result.schema.json`](file:///d:/Workspace/Projects/AgenticWork/schemas/specialist-result.schema.json)
-*   **Mục đích:** Phong bì Đầu ra Chuẩn hóa (**Standardized Output Envelope**) chứa bản nháp do Coder/BA Agent tạo ra trong RAM.
+*   **Mục đích:** Phong bì Vận chuyển Hạ tầng (**Transport Envelope**) được **Agent Output Adapter** đóng gói từ **Domain Model** gốc của Skill/Agent để gửi tới Gateway 2 và Action Agent.
 
 ```typescript
 export interface SpecialistResultContract extends BaseContract {
@@ -139,6 +146,11 @@ export interface SpecialistResultContract extends BaseContract {
   taskId: string;
   specialistRole: 'BA_AGENT' | 'ARCHITECT_AGENT' | 'CODER_AGENT' | 'DATABASE_AGENT' | 'TESTER_AGENT';
   executionType: 'FILE_CREATE' | 'FILE_MODIFY' | 'FILE_DELETE' | 'CHAT_RESPONSE';
+  
+  // Dữ liệu Domain Model gốc thuần túy do Skill/Agent sinh ra (RequirementAnalysis, GeneratedCode, TestPlan...)
+  domainPayload?: Record<string, any>;
+  
+  // Dữ liệu thao tác file/đĩa đã qua Agent Output Adapter chuyển đổi từ domainPayload
   proposedPayload?: Array<{
     targetPath: string;
     content?: string;

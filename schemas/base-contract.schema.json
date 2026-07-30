@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticwork.io/schemas/base-contract.schema.json",
+  "title": "BaseContract",
+  "description": "Hợp đồng Cơ sở định nghĩa các trường hệ thống bắt buộc (traceId, timestamp, fromAgent, contractType) cho mọi gói tin giữa các Agent",
+  "type": "object",
+  "required": ["traceId", "timestamp", "fromAgent", "contractType"],
+  "properties": {
+    "traceId": {
+      "type": "string",
+      "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request từ IDE đến lúc ghi đĩa"
+    },
+    "workflowId": {
+      "type": "string",
+      "description": "Mã định danh luồng công việc cụ thể (Tùy chọn, nếu 1 traceId có nhiều sub-workflows)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Thời điểm khởi tạo gói tin (ISO 8601)"
+    },
+    "fromAgent": {
+      "type": "string",
+      "description": "Định danh Agent hoặc Gateway phát tạo và gửi gói tin này",
+      "enum": [
+        "USER_IDE",
+        "PLANNER_AGENT",
+        "KNOWLEDGE_AGENT",
+        "GW1_POLICY_ENGINE",
+        "BA_AGENT",
+        "ARCHITECT_AGENT",
+        "CODER_AGENT",
+        "DATABASE_AGENT",
+        "TESTER_AGENT",
+        "GW2_REVIEW_QA",
+        "FILE_SYSTEM_AGENT",
+        "GIT_AGENT",
+        "ORCHESTRATOR"
+      ]
+    },
+    "toAgent": {
+      "type": "string",
+      "description": "Định danh Agent hoặc Gateway đích nhận gói tin này (Mặc định ORCHESTRATOR)",
+      "enum": [
+        "USER_IDE",
+        "PLANNER_AGENT",
+        "KNOWLEDGE_AGENT",
+        "GW1_POLICY_ENGINE",
+        "BA_AGENT",
+        "ARCHITECT_AGENT",
+        "CODER_AGENT",
+        "DATABASE_AGENT",
+        "TESTER_AGENT",
+        "GW2_REVIEW_QA",
+        "FILE_SYSTEM_AGENT",
+        "GIT_AGENT",
+        "ORCHESTRATOR"
+      ],
+      "default": "ORCHESTRATOR"
+    },
+    "contractType": {
+      "type": "string",
+      "description": "Loại Hợp đồng Dữ liệu giúp Orchestrator phân loại và kích hoạt bước xử lý tiếp theo trong State Machine",
+      "enum": [
+        "TASK_DAG",
+        "CONTEXT_PAYLOAD",
+        "POLICY_VERIFICATION",
+        "SPECIALIST_RESULT",
+        "REVIEW_QA",
+        "DISK_WRITE"
+      ]
+    }
+  }
+}
