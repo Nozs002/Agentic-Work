@@ -62,6 +62,7 @@
       "type": "string",
       "description": "Loại Hợp đồng Dữ liệu giúp Orchestrator phân loại và kích hoạt bước xử lý tiếp theo trong State Machine",
       "enum": [
+        "AGENT_DISPATCH",
         "TASK_DAG",
         "CONTEXT_PAYLOAD",
         "POLICY_VERIFICATION",

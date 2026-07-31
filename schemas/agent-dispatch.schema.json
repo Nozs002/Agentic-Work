@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticwork.io/schemas/agent-dispatch.schema.json",
+  "title": "AgentDispatchContract",
+  "description": "Hợp đồng Dữ liệu Phát Lệnh Thực thi do Orchestrator đóng gói và giao nhiệm vụ cho các Agent/Gateway",
+  "type": "object",
+  "allOf": [
+    { "$ref": "base-contract.schema.json" }
+  ],
+  "required": ["dispatchId", "taskId", "instruction", "assignedRole"],
+  "properties": {
+    "traceId": {},
+    "workflowId": {},
+    "timestamp": {},
+    "fromAgent": {
+      "const": "ORCHESTRATOR",
+      "description": "BẮT BUỘC: Lệnh Dispatch chỉ được phát tạo duy nhất từ ORCHESTRATOR"
+    },
+    "toAgent": {},
+    "contractType": {
+      "const": "AGENT_DISPATCH"
+    },
+    "dispatchId": {
+      "type": "string",
+      "description": "Mã định danh duy nhất của phiên phát lệnh"
+    },
+    "taskId": {
+      "type": "string",
+      "description": "Mã nhiệm vụ tương ứng trong Task DAG"
+    },
+    "assignedRole": {
+      "type": "string",
+      "enum": [
+        "PLANNER_AGENT",
+        "KNOWLEDGE_AGENT",
+        "GW1_POLICY_ENGINE",
+        "BA_AGENT",
+        "ARCHITECT_AGENT",
+        "CODER_AGENT",
+        "DATABASE_AGENT",
+        "TESTER_AGENT",
+        "GW2_REVIEW_QA",
+        "FILE_SYSTEM_AGENT",
+        "GIT_AGENT"
+      ],
+      "description": "Vai trò Agent/Gateway được giao thực thi lệnh này"
+    },
+    "instruction": {
+      "type": "string",
+      "description": "Chỉ thị/Yêu cầu chi tiết do Orchestrator ban xuống cho Agent thực hiện"
+    },
+    "requiredSkills": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Danh sách các Skill được Orchestrator chỉ định tiêm cho Agent trong lệnh này"
+    },
+    "contextData": {
+      "type": "object",
+      "description": "Bối cảnh đi kèm (Code AST Subgraphs, Business Rules, hoặc Feedback sửa lỗi nếu là lặp lại)"
+    },
+    "isRetry": {
+      "type": "boolean",
+      "default": false,
+      "description": "Nếu true, đây là lệnh yêu cầu sửa lại lỗi do GW2 FAILED trả về"
+    }
+  },
+  "additionalProperties": false
+}

@@ -9,29 +9,13 @@
   ],
   "required": ["contextId", "dagId", "tokenMetrics", "subgraphs", "businessRules"],
   "properties": {
-    "traceId": {
-      "type": "string",
-      "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
-    },
-    "workflowId": {
-      "type": "string",
-      "description": "Mã định danh luồng công việc cụ thể"
-    },
-    "timestamp": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "fromAgent": {
-      "type": "string",
-      "description": "Định danh Agent phát tạo gói tin"
-    },
-    "toAgent": {
-      "type": "string",
-      "description": "Định danh Agent đích nhận gói tin"
-    },
+    "traceId": {},
+    "workflowId": {},
+    "timestamp": {},
+    "fromAgent": {},
+    "toAgent": {},
     "contractType": {
-      "type": "string",
-      "description": "Loại Hợp đồng Dữ liệu (CONTEXT_PAYLOAD)"
+      "const": "CONTEXT_PAYLOAD"
     },
     "contextId": {
       "type": "string",

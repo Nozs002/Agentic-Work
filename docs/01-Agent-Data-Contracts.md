@@ -29,7 +29,7 @@ flowchart LR
 ## 2. Hợp đồng Cơ sở (Base Contract)
 
 *   **JSON Schema:** [`schemas/base-contract.schema.json`](file:///d:/Workspace/Projects/AgenticWork/schemas/base-contract.schema.json)
-*   **Mục đích:** Khai báo các thuộc tính hệ thống cốt lõi bắt buộc (`traceId`, `timestamp`, `fromAgent`, `contractType`) mà tất cả 6 Hợp đồng Dữ liệu đều kế thừa thông qua `allOf`.
+*   **Mục đích:** Khai báo các thuộc tính hệ thống cốt lõi bắt buộc (`traceId`, `timestamp`, `fromAgent`, `contractType`) mà tất cả 7 Hợp đồng Dữ liệu đều kế thừa thông qua `allOf`.
 
 Mọi Data Contract giữa các Agent đều mở rộng (extend) từ `BaseContract` sau:
 
@@ -40,13 +40,29 @@ export interface BaseContract {
   timestamp: string;    // Thời điểm khởi tạo gói tin (ISO 8601)
   fromAgent: 'USER_IDE' | 'PLANNER_AGENT' | 'KNOWLEDGE_AGENT' | 'GW1_POLICY_ENGINE' | 'BA_AGENT' | 'ARCHITECT_AGENT' | 'CODER_AGENT' | 'DATABASE_AGENT' | 'TESTER_AGENT' | 'GW2_REVIEW_QA' | 'FILE_SYSTEM_AGENT' | 'GIT_AGENT' | 'ORCHESTRATOR'; // Nguồn phát tạo
   toAgent?: 'USER_IDE' | 'PLANNER_AGENT' | 'KNOWLEDGE_AGENT' | 'GW1_POLICY_ENGINE' | 'BA_AGENT' | 'ARCHITECT_AGENT' | 'CODER_AGENT' | 'DATABASE_AGENT' | 'TESTER_AGENT' | 'GW2_REVIEW_QA' | 'FILE_SYSTEM_AGENT' | 'GIT_AGENT' | 'ORCHESTRATOR';   // Đích nhận (mặc định ORCHESTRATOR)
-  contractType: 'TASK_DAG' | 'CONTEXT_PAYLOAD' | 'POLICY_VERIFICATION' | 'SPECIALIST_RESULT' | 'REVIEW_QA' | 'DISK_WRITE'; // Phân loại gói tin để Orchestrator chuyển giao State Machine
+  contractType: 'AGENT_DISPATCH' | 'TASK_DAG' | 'CONTEXT_PAYLOAD' | 'POLICY_VERIFICATION' | 'SPECIALIST_RESULT' | 'REVIEW_QA' | 'DISK_WRITE'; // Phân loại gói tin để Orchestrator chuyển giao State Machine
 }
 ```
 
 ---
 
-## 3. Chi tiết 6 Hợp đồng Dữ liệu Cốt lõi
+## 3. Chi tiết 7 Hợp đồng Dữ liệu Cốt lõi
+
+### 📌 3.0 `AgentDispatchContract` (Orchestrator $\rightarrow$ Agents / Gateways)
+*   **JSON Schema:** [`schemas/agent-dispatch.schema.json`](file:///d:/Workspace/Projects/AgenticWork/schemas/agent-dispatch.schema.json)
+*   **Mục đích:** Lệnh Phát Thực thi do **Orchestrator** đóng gói và giao nhiệm vụ hai chiều cho các Agent/Gateway.
+
+```typescript
+export interface AgentDispatchContract extends BaseContract {
+  dispatchId: string;
+  taskId: string;
+  assignedRole: string;
+  instruction: string;
+  requiredSkills?: string[];
+  contextData?: Record<string, any>;
+  isRetry?: boolean;
+}
+```
 
 ### 📌 3.1 `TaskDAGContract` (Planner Agent $\rightarrow$ Knowledge Agent & GW1)
 *   **JSON Schema:** [`schemas/task-dag.schema.json`](file:///d:/Workspace/Projects/AgenticWork/schemas/task-dag.schema.json)

@@ -9,29 +9,16 @@
   ],
   "required": ["reviewId", "resultId", "status"],
   "properties": {
-    "traceId": {
-      "type": "string",
-      "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
-    },
-    "workflowId": {
-      "type": "string",
-      "description": "Mã định danh luồng công việc cụ thể"
-    },
-    "timestamp": {
-      "type": "string",
-      "format": "date-time"
-    },
+    "traceId": {},
+    "workflowId": {},
+    "timestamp": {},
     "fromAgent": {
-      "type": "string",
-      "description": "Định danh Agent phát tạo gói tin"
+      "const": "GW2_REVIEW_QA",
+      "description": "BẮT BUỘC: Kết quả Review QA chỉ do GW2_REVIEW_QA phát tạo"
     },
-    "toAgent": {
-      "type": "string",
-      "description": "Định danh Agent đích nhận gói tin"
-    },
+    "toAgent": {},
     "contractType": {
-      "type": "string",
-      "description": "Loại Hợp đồng Dữ liệu (REVIEW_QA)"
+      "const": "REVIEW_QA"
     },
     "reviewId": {
       "type": "string"

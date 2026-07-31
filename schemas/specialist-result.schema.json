@@ -9,30 +9,13 @@
   ],
   "required": ["resultId", "taskId", "specialistRole", "executionType"],
   "properties": {
-    "traceId": {
-      "type": "string",
-      "description": "Mã định danh vết (Trace ID) đại diện xuyên suốt 1 vòng đời request"
-    },
-    "workflowId": {
-      "type": "string",
-      "description": "Mã định danh luồng công việc cụ thể"
-    },
-    "timestamp": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Thời điểm khởi tạo gói tin (ISO 8601)"
-    },
-    "fromAgent": {
-      "type": "string",
-      "description": "Định danh Agent phát tạo gói tin"
-    },
-    "toAgent": {
-      "type": "string",
-      "description": "Định danh Agent đích nhận gói tin"
-    },
+    "traceId": {},
+    "workflowId": {},
+    "timestamp": {},
+    "fromAgent": {},
+    "toAgent": {},
     "contractType": {
-      "type": "string",
-      "description": "Loại Hợp đồng Dữ liệu (SPECIALIST_RESULT)"
+      "const": "SPECIALIST_RESULT"
     },
     "resultId": {
       "type": "string"
