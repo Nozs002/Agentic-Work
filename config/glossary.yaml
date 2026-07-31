@@ -1,0 +1,54 @@
+# ==============================================================================
+# AgenticWork Framework — Runtime Glossary & Path Aliases Registry (Machine-Readable)
+# ==============================================================================
+# File này được Runtime Engine / Orchestrator / MCP Server đọc tự động lúc runtime.
+# Người dùng thay đổi thông số ở đây để tái cấu hình toàn bộ hệ thống.
+
+version: "1.0.0"
+
+# ------------------------------------------------------------------------------
+# 1. System Settings & Terms Definitions
+# ------------------------------------------------------------------------------
+terms:
+  primary_language:
+    value: "TypeScript"
+    description: "Ngôn ngữ lập trình chính được ưu tiên sử dụng trong mã nguồn dự án."
+  secondary_language:
+    value: "Markdown"
+    description: "Ngôn ngữ tài liệu hóa và khai báo quy trình."
+  default_timezone:
+    value: "Asia/Ho_Chi_Minh"
+    description: "Múi giờ chuẩn sử dụng cho thuộc tính timestamp."
+  environment:
+    value: "development"
+    description: "Môi trường thực thi của hệ thống."
+
+# ------------------------------------------------------------------------------
+# 2. Logical Data Contracts Mapping (Logical Name -> Physical Schema Path)
+# ------------------------------------------------------------------------------
+contracts:
+  BaseContract:
+    schema_path: "schemas/base-contract.schema.json"
+    description: "Hợp đồng cơ sở chứa traceId, timestamp, contractType."
+  AgentDispatchContract:
+    schema_path: "schemas/agent-dispatch.schema.json"
+    description: "Lệnh điều phối công việc từ Orchestrator gửi đến Sub-Agent."
+  SpecialistResultContract:
+    schema_path: "schemas/specialist-result.schema.json"
+    description: "Kết quả thực thi đóng gói từ Sub-Agent gửi về Orchestrator."
+
+# ------------------------------------------------------------------------------
+# 3. System Path Aliases Map
+# ------------------------------------------------------------------------------
+paths:
+  PATH_ROOT: "./"
+  PATH_SCHEMAS: "schemas/"
+  PATH_CONFIG: "config/"
+  PATH_GLOSSARY_CONFIG: "config/glossary.yaml"
+  PATH_USER_DOCS: "docs/"
+  PATH_FRAMEWORK_PROCESS: "docs/07-Process/"
+  PATH_FRAMEWORK_STANDARDS: "docs/07-Process/_standards/"
+  PATH_AGENT_TEMPLATE: "docs/07-Process/agent-template/AGENT.md"
+  PATH_BUSINESS_RULES: "docs/02-Business-Rules/"
+  PATH_DATA_CONTRACTS_DOC: "docs/01-Agent-Data-Contracts.md"
+  PATH_SYSTEM_ARCHITECTURE: "00-System-Architecture.md"
