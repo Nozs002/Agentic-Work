@@ -10,16 +10,34 @@ version: "1.0.0"
 # 1. System Settings & Terms Definitions
 # ------------------------------------------------------------------------------
 terms:
-  primary_language:
-    value: "TypeScript"
-    description: "Ngôn ngữ lập trình chính được ưu tiên sử dụng trong mã nguồn dự án."
-  secondary_language:
-    value: "Markdown"
-    description: "Ngôn ngữ tài liệu hóa và khai báo quy trình."
-  default_timezone:
+  PROJECT_NAME:
+    value: "<TÊN_DỰ_ÁN>"
+    description: "Tên dự án sản phẩm nghiệp vụ của người dùng (quản lý từ thư mục 00-Meta đến 06-Change-Log)."
+  FRAMEWORK_NAME:
+    value: "AgenticWork"
+    description: "Tên bộ khung (framework) quản lý quy trình, tiêu chuẩn và Sub-Agents (nằm ở docs/07-Process)."
+  DOC_VAULT:
+    value: "docs/"
+    description: "Thư mục tài liệu của dự án (cơ sở tri thức dành cho AI)."
+  REPOSITORY_URL:
+    value: "<LINK_GITHUB_REPO>"
+    description: "Đường dẫn kho lưu trữ mã nguồn (GitHub Repository) của dự án."
+  GOOGLE_DRIVE_URL:
+    value: "<LINK_GOOGLE_DRIVE>"
+    description: "Thư mục lưu trữ tài liệu kỹ thuật dành cho con người (Dev, Khách hàng) đọc."
+  TECH_STACK:
+    value: "<ĐIỀN_STACK_CÔNG_NGHỆ>"
+    description: "Tập hợp công nghệ và ngôn ngữ lập trình của dự án."
+  PRIMARY_DOC_LANGUAGE:
+    value: "Vietnamese"
+    description: "Ngôn ngữ chính dùng để viết tài liệu hệ thống và giao tiếp với Agent."
+  SECONDARY_DOC_LANGUAGE:
+    value: "English"
+    description: "Ngôn ngữ phụ dùng cho tài liệu kỹ thuật, mã nguồn và chuẩn giao tiếp."
+  DEFAULT_TIMEZONE:
     value: "Asia/Ho_Chi_Minh"
     description: "Múi giờ chuẩn sử dụng cho thuộc tính timestamp."
-  environment:
+  ENVIRONMENT:
     value: "development"
     description: "Môi trường thực thi của hệ thống."
 
@@ -27,15 +45,9 @@ terms:
 # 2. Logical Data Contracts Mapping (Logical Name -> Physical Schema Path)
 # ------------------------------------------------------------------------------
 contracts:
-  BaseContract:
-    schema_path: "schemas/base-contract.schema.json"
-    description: "Hợp đồng cơ sở chứa traceId, timestamp, contractType."
-  AgentDispatchContract:
-    schema_path: "schemas/agent-dispatch.schema.json"
-    description: "Lệnh điều phối công việc từ Orchestrator gửi đến Sub-Agent."
-  SpecialistResultContract:
-    schema_path: "schemas/specialist-result.schema.json"
-    description: "Kết quả thực thi đóng gói từ Sub-Agent gửi về Orchestrator."
+  BaseContract: "schemas/base-contract.schema.json"
+  AgentDispatchContract: "schemas/agent-dispatch.schema.json"
+  SpecialistResultContract: "schemas/specialist-result.schema.json"
 
 # ------------------------------------------------------------------------------
 # 3. System Path Aliases Map

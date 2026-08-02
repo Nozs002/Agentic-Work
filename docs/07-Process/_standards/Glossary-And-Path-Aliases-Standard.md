@@ -19,7 +19,7 @@ Trong các hệ thống Multi-Agent phát triển dự án lớn, việc hardcod
 ## 2. Các Quy tắc Cốt lõi
 
 ### Quy tắc 1: Khai báo Thuật ngữ tập trung (Glossary Centralization)
-- Mọi thuật ngữ cốt lõi được sử dụng chung trong hệ thống (như `primary_language`, `traceId`, `taskId`, `contractType`) phải được khai báo và giải thích rõ ràng tại:
+- Mọi thuật ngữ cốt lõi được sử dụng chung trong hệ thống (như `TECH_STACK`, `traceId`, `taskId`, `contractType`) phải được khai báo và giải thích rõ ràng tại:
   - **Tài liệu cho Người đọc:** [`docs/00-Meta/Glossary.md`](file:///d:/Workspace/Projects/AgenticWork/docs/00-Meta/Glossary.md)
   - **File cấu hình cho Máy đọc:** [`config/glossary.yaml`](file:///d:/Workspace/Projects/AgenticWork/config/glossary.yaml)
 
@@ -46,7 +46,7 @@ outputContracts:
 
 Runtime Engine truy xuất `config/glossary.yaml` theo 3 khối cấu trúc:
 
-1. **`terms`**: Từ điển định nghĩa thuật ngữ & biến toàn cục (như `primary_language`).
+1. **`terms`**: Từ điển định nghĩa thuật ngữ & biến toàn cục (như `TECH_STACK`).
 2. **`contracts`**: Ánh xạ Logical Contract Name $\rightarrow$ Physical Schema Path (`schemas/*.schema.json`).
 3. **`paths`**: Ánh xạ Path Aliases $\rightarrow$ Relative System Paths.
 
@@ -55,6 +55,6 @@ Runtime Engine truy xuất `config/glossary.yaml` theo 3 khối cấu trúc:
 ## 4. Tiêu chí Nghiệm thu & Tuân thủ (Compliance Checklist)
 
 - [x] Không có Sub-Agent nào hardcode đường dẫn `schemas/xyz.json` trong file spec `AGENT.md`.
-- [x] File `Glossary.md` có đầy đủ định nghĩa thuật ngữ `primary_language` và Bảng Path Aliases.
+- [x] File `Glossary.md` có đầy đủ định nghĩa thuật ngữ `TECH_STACK` và Bảng Path Aliases.
 - [x] File `config/glossary.yaml` hợp lệ cú pháp YAML và khớp với các thông số trong `Glossary.md`.
 - [x] Mọi thay đổi về cấu trúc bộ khung phải được cập nhật tập trung tại `07-Process/_standards/`.

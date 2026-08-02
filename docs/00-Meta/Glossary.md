@@ -1,18 +1,24 @@
 # 📚 Project Glossary & Path Aliases Registry
 
 > **Nguồn sự thật duy nhất (Single Source of Truth) cho Thuật ngữ Dự án & Ánh xạ Đường dẫn Hệ thống.**  
-> **Mục đích:** Tập trung toàn bộ thuật ngữ hệ thống (ví dụ: `primary_language`) và bí danh đường dẫn (Path Aliases / Contract Names) vào một nơi duy nhất. Khi clone hoặc di chuyển dự án, người dùng chỉ cần cập nhật file này (và `config/glossary.yaml`), toàn bộ Sub-Agent và hệ thống sẽ tự động cập nhật mà không cần chỉnh sửa từng file.
+> **Mục đích:** Tập tập trung toàn bộ thuật ngữ hệ thống (ví dụ: `PRIMARY_DOC_LANGUAGE`) và bí danh đường dẫn (Path Aliases / Contract Names) vào một nơi duy nhất. Khi clone hoặc di chuyển dự án, người dùng chỉ cần cập nhật file này (và `config/glossary.yaml`), toàn bộ Sub-Agent và hệ thống sẽ tự động cập nhật mà không cần chỉnh sửa từng file.
 
 ---
 
-## 1. System Configuration & Primary Language (Cấu hình Cơ bản)
+## 1. System Configuration
 
 | Thuật ngữ / Khai báo | Giá trị / Định nghĩa | Giải thích ý nghĩa & Phạm vi sử dụng |
 | :--- | :--- | :--- |
-| `primary_language` | `TypeScript` / `Python` | Ngôn ngữ lập trình chính được dự án ưu tiên sử dụng để phát triển mã nguồn và các module xử lý. |
-| `secondary_language` | `Markdown` / `JSON` | Ngôn ngữ phụ trợ dùng để khai báo hợp đồng dữ liệu, tài liệu quy trình và cấu hình. |
-| `default_timezone` | `Asia/Ho_Chi_Minh` (UTC+7) | Múi giờ chuẩn dùng cho thuộc tính `timestamp` trong mọi gói tin hợp đồng và hệ thống log. |
-| `environment` | `development` | Môi trường thực thi của hệ thống (`development`, `staging`, `production`). |
+| `PROJECT_NAME` | `<TÊN_DỰ_ÁN>` | Tên dự án sản phẩm nghiệp vụ của người dùng (quản lý từ thư mục `00-Meta` đến `06-Change-Log`). |
+| `FRAMEWORK_NAME` | `AgenticWork` | Tên bộ khung (framework) quản lý quy trình, tiêu chuẩn vận hành và Sub-Agents (`docs/07-Process/`). |
+| `DOC_VAULT` | `docs/` | Thư mục tài liệu của dự án (cơ sở tri thức dành cho AI). |
+| `REPOSITORY_URL` | `<LINK_GITHUB_REPO>` | Đường dẫn kho lưu trữ mã nguồn (GitHub Repository) của dự án. |
+| `GOOGLE_DRIVE_URL` | `<LINK_GOOGLE_DRIVE>` | Thư mục lưu trữ tài liệu kỹ thuật dành cho con người (Dev, Khách hàng) đọc. |
+| `TECH_STACK` | `<ĐIỀN_STACK_CÔNG_NGHỆ>` | Tập hợp công nghệ, ngôn ngữ lập trình và định dạng dữ liệu được dự án sử dụng. |
+| `PRIMARY_DOC_LANGUAGE` | `Vietnamese` | Ngôn ngữ chính được dự án sử dụng để viết tài liệu hệ thống và giao tiếp với Agent. |
+| `SECONDARY_DOC_LANGUAGE` | `English` | Ngôn ngữ phụ trợ dùng cho tài liệu kỹ thuật, mã nguồn và chuẩn giao tiếp. |
+| `DEFAULT_TIMEZONE` | `Asia/Ho_Chi_Minh` (UTC+7) | Múi giờ chuẩn dùng cho thuộc tính `timestamp` trong mọi gói tin hợp đồng và hệ thống log. |
+| `ENVIRONMENT` | `development` | Môi trường thực thi của hệ thống (`development`, `staging`, `production`). |
 
 ---
 
@@ -30,15 +36,15 @@
 
 ---
 
-## 3. Data Contracts Registry (Danh mục Hợp đồng Dữ liệu)
+## 3. Data Contracts Registry
 
 > Các Sub-Agent khai báo Hợp đồng qua **Logical Name** tại đây. Runtime Engine sẽ tra bảng này để tìm file Schema tương ứng.
 
-| Logical Contract Name | File Schema Tương Ứng (Runtime Physical Path) | Mục đích |
-| :--- | :--- | :--- |
-| `BaseContract` | `schemas/base-contract.schema.json` | Hợp đồng cơ sở chứa `traceId`, `timestamp`, `contractType`. |
-| `AgentDispatchContract` | `schemas/agent-dispatch.schema.json` | Lệnh điều phối công việc từ Orchestrator gửi đến Sub-Agent. |
-| `SpecialistResultContract` | `schemas/specialist-result.schema.json` | Kết quả thực thi đóng gói từ Sub-Agent gửi về Orchestrator / QA. |
+| Logical Contract Name | File Schema Tương Ứng (Runtime Physical Path) |
+| :--- | :--- |
+| `BaseContract` | `schemas/base-contract.schema.json` |
+| `AgentDispatchContract` | `schemas/agent-dispatch.schema.json` |
+| `SpecialistResultContract` | `schemas/specialist-result.schema.json` |
 
 ---
 
@@ -46,15 +52,15 @@
 
 > Toàn bộ các thư mục và file hệ thống được quản lý thông qua tên đại diện (Path Aliases).
 
-| Path Alias (Tên Đại diện) | Relative Path (Đường dẫn Tương đối) | Mô tả Chức năng |
-| :--- | :--- | :--- |
-| `PATH_ROOT` | `./` | Thư mục gốc của dự án. |
-| `PATH_SCHEMAS` | `schemas/` | Thư mục chứa toàn bộ JSON Schemas của các Data Contracts. |
-| `PATH_CONFIG` | `config/` | Thư mục chứa các file cấu hình YAML của hệ thống. |
-| `PATH_GLOSSARY_CONFIG` | `config/glossary.yaml` | File cấu hình máy đọc chứa Glossary & Path Mapping runtime. |
-| `PATH_USER_DOCS` | `docs/` | Thư mục chứa tài liệu sản phẩm dự án của người dùng (`00` đến `06`). |
-| `PATH_FRAMEWORK_PROCESS` | `docs/07-Process/` | Thư mục chứa quy trình, tiêu chuẩn vận hành và mẫu của bộ khung AgenticWork. |
-| `PATH_FRAMEWORK_STANDARDS` | `docs/07-Process/_standards/` | Thư mục chứa các tiêu chuẩn vận hành chính thức của bộ khung framework. |
-| `PATH_AGENT_TEMPLATE` | `docs/07-Process/agent-template/` | Thư mục mẫu chuẩn hóa để khởi tạo Sub-Agent mới. |
-| `PATH_BUSINESS_RULES` | `docs/02-Business-Rules/` | Thư mục chứa các quy tắc nghiệp vụ dự án của người dùng. |
-| `PATH_SYSTEM_ARCHITECTURE` | `00-System-Architecture.md` | Tài liệu kiến trúc 4 tầng của bộ khung. |
+| Path Alias (Tên Đại diện) | Relative Path (Đường dẫn Tương đối) |
+| :--- | :--- |
+| `PATH_ROOT` | `./` |
+| `PATH_SCHEMAS` | `schemas/` |
+| `PATH_CONFIG` | `config/` |
+| `PATH_GLOSSARY_CONFIG` | `config/glossary.yaml` |
+| `PATH_USER_DOCS` | `docs/` |
+| `PATH_FRAMEWORK_PROCESS` | `docs/07-Process/` |
+| `PATH_FRAMEWORK_STANDARDS` | `docs/07-Process/_standards/` |
+| `PATH_AGENT_TEMPLATE` | `docs/07-Process/agent-template/` |
+| `PATH_BUSINESS_RULES` | `docs/02-Business-Rules/` |
+| `PATH_SYSTEM_ARCHITECTURE` | `00-System-Architecture.md` |
