@@ -45,12 +45,22 @@ tags: ["<tag 1>", "<tag 2>"]
 3. **Bi-directional Knowledge Loop (Truy vấn bổ sung):** Nếu phát hiện thiếu bối cảnh/luật nghiệp vụ trong `ContextPayloadContract`, hãy gửi yêu cầu truy vấn bổ sung (`KnowledgeQueryRequest`) lên Knowledge Agent để lấy thêm file/subgraph thay vì tự suy đoán.
 4. **Degrade Gracefully:** Nếu sau khi truy vấn vẫn thiếu file/module tham chiếu, hãy tạo placeholder an toàn và note lại cảnh báo trong `openQuestions`, KHÔNG làm crash luồng.
 
-## 3. Quy trình Xử lý (Reasoning Phases)
-Khi nhận được yêu cầu, hãy tư duy theo các bước sau trong bộ nhớ (RAM) trước khi xuất kết quả:
-- **Phase 1 — Gather & Analyze:** Đọc kỹ `userPrompt` và phân tích các `businessRules`, `subgraphs` do Knowledge Agent cung cấp. Nếu phát hiện thiếu bối cảnh, gửi `KnowledgeQueryRequest` bổ sung trước khi chuyển sang Phase 2.
-- **Phase 2 — Synthesize (Tổng hợp):** Thiết kế giải pháp / Viết mã nguồn / Phân tích Yêu cầu.
-- **Phase 3 — Self-Audit (Tự kiểm tra):** Đối chiếu giải pháp vừa làm với Definition of Done (bên dưới).
-- **Phase 4 — Wrap Contract:** Đóng gói kết quả thành JSON tuyệt đối không dư thừa text.
+## 3. Quy trình Xử lý (Capability Workflow / Layer 3 Workflow)
+
+Mỗi Skill được mô hình hóa thành một **Capability Workflow Graph (Layer 3 Workflow)** với các nút xử lý, điều kiện kiểm định và vòng lặp tự hoàn thiện (Loop):
+
+```mermaid
+flowchart TD
+    P1[Phase 1 — Gather & Analyze Context] --> P2[Phase 2 — Core Execution & Synthesize]
+    P2 --> P3[Phase 3 — Self-Audit & Loop Evaluation]
+    P3 -->|NO - Incomplete or Needs Query| P1
+    P3 -->|YES - Quality Passed| P4[Phase 4 — Wrap SpecialistResultContract]
+```
+
+- **Phase 1 — Gather & Analyze Context:** Đọc kỹ `userPrompt` và phân tích các `businessRules`, `subgraphs` do Knowledge Agent cung cấp. Nếu phát hiện thiếu bối cảnh, gửi `KnowledgeQueryRequest` bổ sung.
+- **Phase 2 — Core Execution & Synthesize:** Thiết kế giải pháp / Viết mã nguồn / Phân tích Yêu cầu.
+- **Phase 3 — Self-Audit & Loop Evaluation:** Đối chiếu giải pháp vừa làm với Definition of Done. Nếu phát hiện chưa đạt hoặc thiếu thông tin, thực hiện vòng lặp Loop về Phase 1/Phase 2.
+- **Phase 4 — Wrap SpecialistResultContract:** Đóng gói kết quả thành JSON `SpecialistResultContract` gửi cho Gateway 2.
 
 ## 4. Definition of Done (Tiêu chuẩn hoàn thành - Căn cứ để GW2 chấm điểm)
 - [ ] <Điều kiện đo được 1 - VD: Đã quét đủ các edge cases của luồng thanh toán>.

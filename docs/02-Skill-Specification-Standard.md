@@ -64,9 +64,11 @@ requires:
 
 ---
 
-## 3. Cấu trúc Thân bài `SKILL.md` (Reasoning Framework)
+## 3. Cấu trúc Thân bài `SKILL.md` (Capability Workflow / Layer 3 Workflow)
 
-Thân bài Markdown của file `SKILL.md` hướng dẫn Specialist Agent thực thi tư duy theo các phần chuẩn hóa sau:
+> **Mô hình "Capability Workflow":** Skill trong **AgenticWork** không còn là một Prompt dài tĩnh đơn lẻ. Mỗi Skill được mô hình hóa thành một **Workflow đồ thị nhỏ (Layer 3 Workflow)** với các nút bước xử lý, rẽ nhánh điều kiện và vòng lặp tự đánh giá (Loop).
+
+Thân bài Markdown của file `SKILL.md` hướng dẫn Specialist Agent thực thi theo cấu hình Capability Workflow chuẩn sau:
 
 ```markdown
 # [Tên Kỹ Năng]
@@ -78,12 +80,22 @@ Thân bài Markdown của file `SKILL.md` hướng dẫn Specialist Agent thực
 ## Mục tiêu
 [Mô tả cụ thể kết quả sản phẩm cần đạt được]
 
-## Nguyên tắc Cốt lõi
-1. Zero-hallucination (Không tự bịa ý khách/mã nguồn).
-2. [Nguyên tắc chuyên môn 2...]
+## Capability Workflow Graph (Layer 3 Workflow)
+```mermaid
+flowchart TD
+    Step1[1. Prepare Context] --> Step2[2. Execute Action / Ask Question]
+    Step2 --> Step3[3. Update Working Draft]
+    Step3 --> Step4{4. Evaluate Sufficiency / Quality?}
+    Step4 -->|NO - Need More Info| Step2
+    Step4 -->|YES - Complete| Step5[5. Finalize Output Payload]
+```
 
 ## Quy trình Tư duy & Các Bước Thực thi
-[Mô tả quy trình từng bước mà Specialist Agent cần tuân theo]
+1. **Bước 1: Prepare Context** — Bóc tách bối cảnh do Knowledge Agent tiêm.
+2. **Bước 2: Execute Action / Ask Question** — Thực hiện phỏng vấn/suy luận logic.
+3. **Bước 3: Update Working Draft** — Cập nhật bản thảo tạm thời.
+4. **Bước 4: Evaluate Completeness (Loop Gate)** — Tự kiểm tra nếu thiếu thông tin thì lặp lại Bước 2.
+5. **Bước 5: Finalize Output Payload** — Đóng gói `SpecialistResultContract`.
 
 ## Định dạng Đầu ra (Artifact Contract / Output Envelope)
 [BẮT BUỘC: Quy định đóng gói JSON Payload theo chuẩn SpecialistResultContract]

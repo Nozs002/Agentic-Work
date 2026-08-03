@@ -13,6 +13,7 @@
 - 📁 [04-Workflows-Diagrams](04-Workflows-Diagrams/) — Sơ đồ luồng & quy trình nghiệp vụ (ACCOUNT, SALE,...)
 - 📁 [05-System-Responses](05-System-Responses/) — Mã phản hồi & thông báo hệ thống (Global, STOCK,...)
 - 📁 [06-Change-Log](06-Change-Log/) — Nhật ký thay đổi & các yêu cầu thay đổi (Change Requests - CR)
-- 📁 [07-Process](07-Process/README.md) — quy trình + template + **Standards Kit**
+- 📁 [07-Process](07-Process/README.md) — Quy trình + Template + **Standards Kit** ([`STD-FW-001`](07-Process/_standards/Glossary-And-Path-Aliases-Standard.md), [`STD-FW-002`](07-Process/_standards/Workflow-Engine-Standard.md))
+- 📘 [08-Workflow-Engine-Specification](08-Workflow-Engine-Specification.md) — Đặc tả Kỹ thuật Workflow Engine (Multi-Layer Graph, State, DSL)
 
-> Mới vào? Đọc [07-Process/_standards/README](07-Process/_standards/README.md) để nắm luật + công cụ.
+> Mới vào? Đọc [07-Process/README](07-Process/README.md) để nắm luật + công cụ.

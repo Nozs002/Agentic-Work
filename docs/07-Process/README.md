@@ -9,6 +9,7 @@
 ## 📜 Danh sách Tiêu chuẩn Vận hành Framework (`docs/07-Process/_standards/`)
 
 - 📚 [STD-FW-001: Glossary & Path Aliases Standard](file:///d:/Workspace/Projects/AgenticWork/docs/07-Process/_standards/Glossary-And-Path-Aliases-Standard.md) — Tiêu chuẩn quy định quản lý tập trung thuật ngữ (`TECH_STACK`) và tách biệt đường dẫn (Decoupled Contracts & Path Aliases) qua `config/glossary.yaml`.
+- 🔀 [STD-FW-002: Workflow Engine Standard](file:///d:/Workspace/Projects/AgenticWork/docs/07-Process/_standards/Workflow-Engine-Standard.md) — Tiêu chuẩn thiết kế Workflow Engine áp dụng LangGraph Patterns (Graph Thinking, Centralized `WorkflowState`, 3-Layer Workflow, Contract-based Execution, Checkpoints) độc lập với framework.
 
 ---
 

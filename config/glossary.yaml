@@ -40,6 +40,18 @@ terms:
   ENVIRONMENT:
     value: "development"
     description: "Môi trường thực thi của hệ thống."
+  WorkflowState:
+    value: "Centralized State"
+    description: "Trạng thái toàn cục duy nhất của quy trình công việc do Orchestrator quản lý độc quyền."
+  CapabilityWorkflow:
+    value: "Skill Workflow"
+    description: "Quy trình thực thi nhiều bước (graph) bên trong một Skill, thay thế cho prompt tĩnh đơn lẻ."
+  WorkflowDSL:
+    value: "Custom YAML Schema"
+    description: "Cấu trúc ngôn ngữ khai báo quy trình (Graph, Node, Edge, Condition, Loop, Parallel, Checkpoint)."
+  Checkpoint:
+    value: "State Snapshot"
+    description: "Điểm lưu trạng thái quy trình để phục vụ Human-in-the-Loop hoặc phục hồi sau sự cố."
 
 # ------------------------------------------------------------------------------
 # 2. Logical Data Contracts Mapping (Logical Name -> Physical Schema Path)
@@ -48,6 +60,7 @@ contracts:
   BaseContract: "schemas/base-contract.schema.json"
   AgentDispatchContract: "schemas/agent-dispatch.schema.json"
   SpecialistResultContract: "schemas/specialist-result.schema.json"
+  WorkflowDefinitionContract: "schemas/workflow-definition.schema.json"
 
 # ------------------------------------------------------------------------------
 # 3. System Path Aliases Map
@@ -64,3 +77,6 @@ paths:
   PATH_BUSINESS_RULES: "docs/02-Business-Rules/"
   PATH_DATA_CONTRACTS_DOC: "docs/01-Agent-Data-Contracts.md"
   PATH_SYSTEM_ARCHITECTURE: "00-System-Architecture.md"
+  PATH_WORKFLOW_SCHEMA: "schemas/workflow-definition.schema.json"
+  PATH_WORKFLOW_SPEC: "docs/08-Workflow-Engine-Specification.md"
+  PATH_WORKFLOW_STANDARD: "docs/07-Process/_standards/Workflow-Engine-Standard.md"

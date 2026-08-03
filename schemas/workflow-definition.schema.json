@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticwork.io/schemas/workflow-definition.schema.json",
+  "title": "WorkflowDefinitionContract",
+  "description": "Hợp đồng Dữ liệu Cấu hình Ngôn ngữ Khai báo Quy trình Custom Workflow DSL trong Hệ thống AgenticWork",
+  "type": "object",
+  "required": ["version", "workflow"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "example": "1.0.0",
+      "description": "Phiên bản của định dạng Workflow DSL Schema"
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["id", "name", "startNode", "nodes"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "ID định danh duy nhất của Workflow (ví dụ: feature-development-pipeline)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Tên dễ đọc của Workflow"
+        },
+        "description": {
+          "type": "string",
+          "description": "Mô tả mục tiêu và chức năng của quy trình này"
+        },
+        "startNode": {
+          "type": "string",
+          "description": "ID nút khởi đầu quy trình"
+        },
+        "checkpointPolicy": {
+          "type": "string",
+          "enum": ["NEVER", "ON_GATEWAY", "ON_HUMAN", "ON_GATEWAY_OR_HUMAN", "ALWAYS"],
+          "default": "ON_GATEWAY_OR_HUMAN",
+          "description": "Chính sách tự động lưu checkpoint trạng thái WorkflowState"
+        },
+        "nodes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["AGENT", "SKILL", "GATEWAY", "PARALLEL_GROUP", "CHECKPOINT", "ACTION_AGENT"],
+                "description": "Loại nút xử lý trong quy trình"
+              },
+              "assignedRole": {
+                "type": "string",
+                "description": "Vai trò Agent/Gateway đảm nhận (ví dụ: PLANNER_AGENT, BA_AGENT, GW1_POLICY_ENGINE)"
+              },
+              "capabilityWorkflow": {
+                "type": "string",
+                "description": "Tên Skill/Capability Workflow (Layer 3 Workflow) được gọi trong nút này"
+              },
+              "gatewayType": {
+                "type": "string",
+                "enum": ["GW1_POLICY_ENGINE", "GW2_REVIEW_QA"],
+                "description": "Phân loại Gateway kiểm duyệt"
+              },
+              "inputContract": {
+                "type": "string",
+                "description": "Logical Contract Name của hợp đồng dữ liệu nhận vào (ví dụ: TaskDAGContract)"
+              },
+              "outputContract": {
+                "type": "string",
+                "description": "Logical Contract Name của hợp đồng dữ liệu trả về (ví dụ: SpecialistResultContract)"
+              },
+              "next": {
+                "type": "string",
+                "description": "ID nút thực thi tiếp theo (Direct Edge)"
+              },
+              "end": {
+                "type": "boolean",
+                "default": false,
+                "description": "Nếu true, đây là nút kết thúc quy trình"
+              },
+              "condition": {
+                "type": "object",
+                "description": "Định nghĩa rẽ nhánh điều kiện (Conditional Edge)",
+                "properties": {
+                  "field": { "type": "string" },
+                  "operator": { "type": "string", "enum": ["EQUALS", "NOT_EQUALS", "CONTAINS", "GREATER_THAN"] },
+                  "match": {
+                    "type": "object",
+                    "additionalProperties": { "type": "string" }
+                  },
+                  "approved": { "type": "string" },
+                  "rejected": { "type": "string" },
+                  "need_human_approval": { "type": "string" }
+                }
+              },
+              "branches": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Danh sách các nhánh nút thực thi song song (dành cho PARALLEL_GROUP)"
+              },
+              "joinStrategy": {
+                "type": "string",
+                "enum": ["ALL_COMPLETED", "FIRST_COMPLETED"],
+                "default": "ALL_COMPLETED",
+                "description": "Chiến lược hợp nhất luồng song song"
+              },
+              "maxRetries": {
+                "type": "integer",
+                "default": 3,
+                "description": "Số lần lặp sửa lỗi tối đa nếu gặp thất bại (Retry Loop)"
+              },
+              "isRetryNode": {
+                "type": "boolean",
+                "default": false
+              },
+              "resumeNode": {
+                "type": "string",
+                "description": "Nút tiếp tục sau khi giải phóng Checkpoint (dành cho CHECKPOINT)"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

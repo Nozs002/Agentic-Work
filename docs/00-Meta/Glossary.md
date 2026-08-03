@@ -33,6 +33,10 @@
 | **`Dual Knowledge Graph`** | Đồ thị Tri thức Kép kết hợp **Code Graph** (AST mã nguồn) và **Business Graph** (Luật nghiệp vụ Obsidian) để truy xuất ngữ cảnh chính xác. |
 | **`Logical Contract Name`** | Tên đại diện cho hợp đồng dữ liệu (ví dụ: `AgentDispatchContract`), giúp decoupled `AGENT.md` khỏi vị trí file đĩa vật lý. |
 | **`Path Alias`** | Bí danh đường dẫn (ví dụ: `PATH_SCHEMAS`), cho phép hệ thống tham chiếu thư mục/file mà không hardcode đường dẫn tuyệt đối. |
+| **`WorkflowState`** | Trạng thái toàn cục duy nhất của quy trình công việc do Orchestrator quản lý độc quyền (không chia sẻ trực tiếp cho Agent sửa). |
+| **`CapabilityWorkflow`** | Quy trình thực thi nhiều bước (Graph) bên trong một Skill (Layer 3 Workflow), thay thế cho prompt tĩnh đơn lẻ. |
+| **`WorkflowDSL`** | Ngôn ngữ khai báo cấu hình quy trình dạng YAML (Node, Edge, Condition, Loop, Parallel DAG, Checkpoint). |
+| **`Checkpoint`** | Điểm lưu ảnh chụp trạng thái quy trình (State Snapshot) để phục vụ Human-in-the-Loop hoặc phục hồi sau sự cố. |
 
 ---
 
@@ -45,6 +49,7 @@
 | `BaseContract` | `schemas/base-contract.schema.json` |
 | `AgentDispatchContract` | `schemas/agent-dispatch.schema.json` |
 | `SpecialistResultContract` | `schemas/specialist-result.schema.json` |
+| `WorkflowDefinitionContract` | `schemas/workflow-definition.schema.json` |
 
 ---
 
@@ -64,3 +69,6 @@
 | `PATH_AGENT_TEMPLATE` | `docs/07-Process/agent-template/` |
 | `PATH_BUSINESS_RULES` | `docs/02-Business-Rules/` |
 | `PATH_SYSTEM_ARCHITECTURE` | `00-System-Architecture.md` |
+| `PATH_WORKFLOW_SCHEMA` | `schemas/workflow-definition.schema.json` |
+| `PATH_WORKFLOW_SPEC` | `docs/08-Workflow-Engine-Specification.md` |
+| `PATH_WORKFLOW_STANDARD` | `docs/07-Process/_standards/Workflow-Engine-Standard.md` |

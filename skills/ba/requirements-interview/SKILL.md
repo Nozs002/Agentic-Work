@@ -72,15 +72,22 @@ Hỏi theo thứ tự, mỗi tầng là một lượt (gộp tầng nhỏ nếu 
 
 > Mỗi tầng: nếu người dùng không chắc → KHÔNG tự điền; đánh dấu `⚠️ cần xác nhận với Khách hàng` và đẩy vào OPEN QUESTIONS.
 
-## Quy trình
-1. **Nhận diện chế độ** (A/B) và nhận diện đây là CR mới hay bổ sung CR cũ.
-2. **(Nếu có nguồn) Tra cứu bối cảnh trước khi hỏi:** Chủ động đọc các tài liệu liên quan trong `/docs` để không hỏi lại những gì đã ghi nhận. Luôn trích dẫn nguồn khi dẫn lại thông tin.
-3. **Phỏng vấn theo khung** (A) hoặc phân kỳ→hội tụ (B). Một nhóm chủ đề / lượt.
-4. **Soạn CR nháp** theo ĐÚNG tệp Template-Change-Request.md trong `00-Meta/Templates` (KHÔNG tự chế format mới). Điền những gì đã xác nhận; phần chưa chắc để ở OPEN QUESTIONS.
-5. **Xuất 2 đầu ra:**
-   - **A) Change Request nháp** (markdown, lưu vào nơi quy ước của vault, liên kết `[[module]]`).
-   - **B) Danh sách câu hỏi gửi Khách hàng** (song ngữ `{{LANG_PRIMARY}}` + `{{LANG_SECONDARY}}`, đánh số, ngắn gọn để khách trả lời nhanh).
-6. **Bàn giao:** gợi ý bước kế tiếp — `module-documentation` (viết spec đầy đủ) khi CR đã đủ rõ.
+## Capability Workflow Graph (Layer 3 Workflow)
+```mermaid
+flowchart TD
+    Step1[1. Context Lookup & Mode Detection] --> Step2[2. Interview Questioning Loop / Socratic]
+    Step2 --> Step3[3. Update Working Draft CR]
+    Step3 --> Step4{4. Evaluate Gate Criteria: Enough to Write Spec?}
+    Step4 -->|NO - Open Questions Exist| Step2
+    Step4 -->|YES - Gate Passed| Step5[5. Package SpecialistResultContract]
+```
+
+## Quy trình Thực thi Capability Workflow
+1. **Bước 1: Context Lookup & Mode Detection** — Nhận diện chế độ (A - Clarify / B - Brainstorm), đọc `ContextPayloadContract` và tra cứu tài liệu liên quan trong `/docs` để không hỏi trùng.
+2. **Bước 2: Interview Questioning Loop** — Phỏng vấn theo khung 11 tầng (Chế độ A) hoặc phân kỳ→hội tụ (Chế độ B). Đặt 1 nhóm câu hỏi / lượt qua `AskUserQuestion`.
+3. **Bước 3: Update Working Draft CR** — Soạn và cập nhật Change Request nháp theo đúng `Template-Change-Request.md` trong `00-Meta/Templates`.
+4. **Bước 4: Evaluate Gate Criteria (Loop Gate)** — Tự đánh giá xem CR đã đủ rõ để viết spec chưa. Nếu còn thông tin thiếu, lặp lại Bước 2 (đặt câu hỏi tiếp hoặc đẩy vào OPEN QUESTIONS).
+5. **Bước 5: Package SpecialistResultContract** — Đóng gói CR nháp và danh sách câu hỏi theo chuẩn `SpecialistResultContract` gửi cho Gateway 2.
 
 ## Định dạng Đầu ra (Artifact Contract / Output Envelope)
 BA Agent bắt buộc đóng gói kết quả theo chuẩn `SpecialistResultContract` (Output Envelope) để gửi tới Gateway 2 (Review QA) kiểm duyệt trước khi Action Agent lưu file:

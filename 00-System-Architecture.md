@@ -60,11 +60,16 @@ flowchart TB
 
 ### Phân loại các Agent trong Hệ thống
 
-#### 🧠 a. Bộ Điều phối & Quản lý Trạng thái (Orchestration & State Management)
-*   **Orchestrator:** "Bộ brain" trung tâm phân loại ý định (Intent Classification) từ IDE và điều phối luồng dữ liệu giữa các Agent.
+#### 🧠 a. Bộ Điều phối & Quản lý Trạng thái (Orchestration, Workflow Engine & State Management)
+*   **Orchestrator (Workflow Engine):** "Bộ brain" trung tâm vận hành Động cơ Workflow theo các pattern của LangGraph (`STD-FW-002`). Quản lý độc quyền `WorkflowState`, phân loại ý định (Intent Classification) và điều phối luồng dữ liệu giữa các Node (Agent/Skill) thông qua Hợp đồng Dữ liệu (Contract-based Execution). **Tuyệt đối không cho phép Agent giao tiếp trực tiếp với nhau.**
 *   **Planner Agent (Task Orchestrator):** Phân rã prompt phức tạp thành **Đồ thị Công việc (Task DAG - Directed Acyclic Graph)**.
 *   **Knowledge Agent (Context Orchestrator):** Phân tích ý định ngữ cảnh, suy luận phụ thuộc, bóc tách **Code AST Graph** & **Business Rules**, tối ưu Token và chuẩn bị bối cảnh chuẩn xác nhất cho các Specialist Agents.
-*   **State Manager:** Quản lý context window, bộ nhớ phiên làm việc và đếm số vòng lặp sửa lỗi (**Retry Loop Counter**).
+*   **State Manager & WorkflowState:** Quản lý context window, bộ nhớ phiên làm việc, lưu giữ snapshot trạng thái (`Checkpoint`) phục vụ Human-in-the-Loop và đếm số vòng lặp sửa lỗi (**Retry Loop Counter**).
+
+#### 🔀 b. Kiến trúc 3 Tầng Workflow (Multi-Layer Workflow Hierarchy)
+*   **Layer 1 - Orchestrator Workflow (High-Level DAG):** Luồng đồ thị điều phối giữa các Agent (`Planner → Knowledge → Specialist Agent → Gateway → Action Agent`).
+*   **Layer 2 - Agent Workflow (Agent Internal Flow):** Luồng tư duy nghiệp vụ nội bộ của từng Sub-Agent.
+*   **Layer 3 - Skill Workflow (Capability Execution Flow):** Mô hình hóa bản thân từng Skill dưới dạng một **Capability Graph** (`Prepare → Ask → Update → Evaluate → Loop → Finalize`). Skill không còn là Prompt dài tĩnh.
 
 #### 💡 b. Tác tử Chuyên gia (Specialist Agents — Chỉ Tư duy, KHÔNG ghi file)
 > **Nguyên tắc An toàn:** Nhóm này chỉ hoạt động trong RAM/Context để suy luận, phân tích và sinh code/spec nháp, **tuyệt đối không có quyền gọi File System API hay Git API**.
