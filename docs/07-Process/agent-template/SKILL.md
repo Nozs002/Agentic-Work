@@ -27,10 +27,10 @@ tags: ["<tag 1>", "<tag 2>"]
 
 > Skill lo đúng MỘT việc: <...>. Nhận dữ liệu từ `ContextPayloadContract`, xử lý logic. Nếu phát hiện thiếu bối cảnh/luật nghiệp vụ, BẮT BUỘC gửi yêu cầu truy vấn bổ sung lên **Knowledge Agent**; khi hoàn tất, trả về `SpecialistResultContract` để Gateway kiểm duyệt. KHÔNG tự ý ghi file.
 
-## Config (Tham số dự án)
-- `{{PROJECT}}` — Tên dự án
-- `/docs` — Thư mục tài liệu vault
-- `{{LANG_PRIMARY}}` / `{{LANG_SECONDARY}}` — Ngôn ngữ xử lý (VD: VI / EN)
+## Config (Tham số dự án — Tự động Inject từ Glossary / glossary.yaml)
+- `{{PROJECT_NAME}}` — Tên dự án sản phẩm nghiệp vụ
+- `{{DOC_VAULT}}` — Thư mục tài liệu tri thức (VD: `docs/`)
+- `{{PRIMARY_DOC_LANGUAGE}}` / `{{SECONDARY_DOC_LANGUAGE}}` — Ngôn ngữ viết tài liệu và giao tiếp (VD: `Vietnamese` / `English`)
 
 ## 1. Task Mindset & Core Principles (Tư duy & Nguyên tắc Nhiệm vụ)
 - **Góc nhìn thực thi:** <Mô tả góc nhìn đặc thù khi chạy skill này — VD: Tư duy như một Reviewer khó tính / Đặt câu hỏi kiểu Socratic>.

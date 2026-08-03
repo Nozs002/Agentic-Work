@@ -17,10 +17,10 @@ requires:
 
 # {{SKILL_TITLE}}
 
-## Config (điền khi áp vào dự án)
-- `{{PROJECT}}` — tên dự án
-- `/docs` — thư mục docs vault
-- `{{LANG_PRIMARY}}` / `{{LANG_SECONDARY}}` — ngôn ngữ (mặc định VI + EN)
+## Config (Tham số dự án — Tự động Inject từ Glossary / glossary.yaml)
+- `{{PROJECT_NAME}}` — Tên dự án sản phẩm nghiệp vụ
+- `{{DOC_VAULT}}` — Thư mục tài liệu tri thức (VD: `docs/`)
+- `{{PRIMARY_DOC_LANGUAGE}}` / `{{SECONDARY_DOC_LANGUAGE}}` — Ngôn ngữ viết tài liệu và giao tiếp (VD: `Vietnamese` / `English`)
 
 ## Mục tiêu
 Mô tả rõ ràng kết quả cụ thể mà Skill này phải đạt được sau khi thực thi.
