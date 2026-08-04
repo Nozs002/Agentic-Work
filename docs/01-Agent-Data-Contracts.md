@@ -46,9 +46,22 @@ export interface BaseContract {
 
 ---
 
-## 3. Chi tiết 7 Hợp đồng Dữ liệu Cốt lõi
+## 3. Hợp đồng DSL & Quản lý Workflow State (`WorkflowState`)
 
-### 📌 3.0 `AgentDispatchContract` (Orchestrator $\rightarrow$ Agents / Gateways)
+### 📌 `WorkflowDefinitionContract` (Custom YAML DSL Config $\rightarrow$ Orchestrator)
+*   **JSON Schema:** [`schemas/workflow-definition.schema.json`](file:///d:/Workspace/Projects/AgenticWork/schemas/workflow-definition.schema.json)
+*   **Logical Contract Name:** `WorkflowDefinitionContract` (tra cứu qua `config/glossary.yaml`)
+*   **Mục đích:** Định nghĩa cấu hình quy trình Đồ thị (Node, Edge, Condition, Loop, Parallel DAG, Checkpoint) cho Workflow Engine mà không phụ thuộc LangGraph SDK.
+
+### 📌 Quy tắc Vàng về `WorkflowState`:
+1. **Orchestrator Managed Only:** `WorkflowState` do Orchestrator lưu giữ và cập nhật. Các Agent hoàn toàn Stateless và tuyệt đối **không được đột biến trực tiếp** `WorkflowState`.
+2. **Contract Isolation:** Agent tiếp nhận `AgentDispatchContract` (Input Contract) và trả kết quả qua `SpecialistResultContract` (Output Contract). Orchestrator chịu trách nhiệm hợp nhất dữ liệu vào `WorkflowState`.
+
+---
+
+## 4. Chi tiết các Hợp đồng Dữ liệu Cốt lõi
+
+### 📌 4.0 `AgentDispatchContract` (Orchestrator $\rightarrow$ Agents / Gateways)
 *   **JSON Schema:** [`schemas/agent-dispatch.schema.json`](file:///d:/Workspace/Projects/AgenticWork/schemas/agent-dispatch.schema.json)
 *   **Mục đích:** Lệnh Phát Thực thi do **Orchestrator** đóng gói và giao nhiệm vụ hai chiều cho các Agent/Gateway.
 

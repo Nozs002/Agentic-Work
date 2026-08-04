@@ -1,0 +1,82 @@
+# ==============================================================================
+# AgenticWork Framework — Runtime Glossary & Path Aliases Registry (Machine-Readable)
+# ==============================================================================
+# File này được Runtime Engine / Orchestrator / MCP Server đọc tự động lúc runtime.
+# Người dùng thay đổi thông số ở đây để tái cấu hình toàn bộ hệ thống.
+
+version: "1.0.0"
+
+# ------------------------------------------------------------------------------
+# 1. System Settings & Terms Definitions
+# ------------------------------------------------------------------------------
+terms:
+  PROJECT_NAME:
+    value: "<TÊN_DỰ_ÁN>"
+    description: "Tên dự án sản phẩm nghiệp vụ của người dùng (quản lý từ thư mục 00-Meta đến 06-Change-Log)."
+  FRAMEWORK_NAME:
+    value: "AgenticWork"
+    description: "Tên bộ khung (framework) quản lý quy trình, tiêu chuẩn và Sub-Agents (nằm ở docs/07-Process)."
+  DOC_VAULT:
+    value: "docs/"
+    description: "Thư mục tài liệu của dự án (cơ sở tri thức dành cho AI)."
+  REPOSITORY_URL:
+    value: "<LINK_GITHUB_REPO>"
+    description: "Đường dẫn kho lưu trữ mã nguồn (GitHub Repository) của dự án."
+  GOOGLE_DRIVE_URL:
+    value: "<LINK_GOOGLE_DRIVE>"
+    description: "Thư mục lưu trữ tài liệu kỹ thuật dành cho con người (Dev, Khách hàng) đọc."
+  TECH_STACK:
+    value: "<ĐIỀN_STACK_CÔNG_NGHỆ>"
+    description: "Tập hợp công nghệ và ngôn ngữ lập trình của dự án."
+  PRIMARY_DOC_LANGUAGE:
+    value: "Vietnamese"
+    description: "Ngôn ngữ chính dùng để viết tài liệu hệ thống và giao tiếp với Agent."
+  SECONDARY_DOC_LANGUAGE:
+    value: "English"
+    description: "Ngôn ngữ phụ dùng cho tài liệu kỹ thuật, mã nguồn và chuẩn giao tiếp."
+  DEFAULT_TIMEZONE:
+    value: "Asia/Ho_Chi_Minh"
+    description: "Múi giờ chuẩn sử dụng cho thuộc tính timestamp."
+  ENVIRONMENT:
+    value: "development"
+    description: "Môi trường thực thi của hệ thống."
+  WorkflowState:
+    value: "Centralized State"
+    description: "Trạng thái toàn cục duy nhất của quy trình công việc do Orchestrator quản lý độc quyền."
+  CapabilityWorkflow:
+    value: "Skill Workflow"
+    description: "Quy trình thực thi nhiều bước (graph) bên trong một Skill, thay thế cho prompt tĩnh đơn lẻ."
+  WorkflowDSL:
+    value: "Custom YAML Schema"
+    description: "Cấu trúc ngôn ngữ khai báo quy trình (Graph, Node, Edge, Condition, Loop, Parallel, Checkpoint)."
+  Checkpoint:
+    value: "State Snapshot"
+    description: "Điểm lưu trạng thái quy trình để phục vụ Human-in-the-Loop hoặc phục hồi sau sự cố."
+
+# ------------------------------------------------------------------------------
+# 2. Logical Data Contracts Mapping (Logical Name -> Physical Schema Path)
+# ------------------------------------------------------------------------------
+contracts:
+  BaseContract: "schemas/base-contract.schema.json"
+  AgentDispatchContract: "schemas/agent-dispatch.schema.json"
+  SpecialistResultContract: "schemas/specialist-result.schema.json"
+  WorkflowDefinitionContract: "schemas/workflow-definition.schema.json"
+
+# ------------------------------------------------------------------------------
+# 3. System Path Aliases Map
+# ------------------------------------------------------------------------------
+paths:
+  PATH_ROOT: "./"
+  PATH_SCHEMAS: "schemas/"
+  PATH_CONFIG: "config/"
+  PATH_GLOSSARY_CONFIG: "config/glossary.yaml"
+  PATH_USER_DOCS: "docs/"
+  PATH_FRAMEWORK_PROCESS: "docs/07-Process/"
+  PATH_FRAMEWORK_STANDARDS: "docs/07-Process/_standards/"
+  PATH_AGENT_TEMPLATE: "docs/07-Process/agent-template/AGENT.md"
+  PATH_BUSINESS_RULES: "docs/02-Business-Rules/"
+  PATH_DATA_CONTRACTS_DOC: "docs/01-Agent-Data-Contracts.md"
+  PATH_SYSTEM_ARCHITECTURE: "00-System-Architecture.md"
+  PATH_WORKFLOW_SCHEMA: "schemas/workflow-definition.schema.json"
+  PATH_WORKFLOW_SPEC: "docs/08-Workflow-Engine-Specification.md"
+  PATH_WORKFLOW_STANDARD: "docs/07-Process/_standards/Workflow-Engine-Standard.md"
