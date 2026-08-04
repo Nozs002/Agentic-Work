@@ -1,4 +1,4 @@
-# 📜 Tiêu chuẩn Bộ khung: Quy tắc Thiết kế & Vận hành Workflow Engine (LangGraph Patterns Adaptation)
+# 📜 Tiêu chuẩn Bộ khung: Quy tắc Thiết kế & Vận hành Workflow Engine
 
 > **Mã tiêu chuẩn:** `STD-FW-002`  
 > **Phạm vi áp dụng:** Toàn bộ Động cơ Điều phối (Orchestrator Engine), Sub-Agents, Skill Hub, Runtime Engine và Gateway trong bộ khung AgenticWork.  

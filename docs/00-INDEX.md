@@ -6,14 +6,13 @@
 
 ## 0. Cây tài liệu hệ thống
 
-- 📁 [00-Meta](00-Meta/) — Các mẫu Template chuẩn hóa (Change Request, Business Rule, Epic, Feature, Data Dictionary...)
+- 📁 [00-Meta](00-Meta/README.md) — Các mẫu Template chuẩn hóa (Change Request, Business Rule, Epic, Feature, Data Dictionary...)
 - 📁 [01-Requirements](01-Requirements/) — Yêu cầu hệ thống (Epics, Features, User Stories)
 - 📁 [02-Business-Rules](02-Business-Rules/) — Tập quy tắc nghiệp vụ (Core Rules, Permissions, Validation Rules)
 - 📁 [03-Data-Dictionary](03-Data-Dictionary/) — Từ điển dữ liệu theo từng phân hệ (CRM, SALE,...)
 - 📁 [04-Workflows-Diagrams](04-Workflows-Diagrams/) — Sơ đồ luồng & quy trình nghiệp vụ (ACCOUNT, SALE,...)
 - 📁 [05-System-Responses](05-System-Responses/) — Mã phản hồi & thông báo hệ thống (Global, STOCK,...)
 - 📁 [06-Change-Log](06-Change-Log/) — Nhật ký thay đổi & các yêu cầu thay đổi (Change Requests - CR)
-- 📁 [07-Process](07-Process/README.md) — Quy trình + Template + **Standards Kit** ([`STD-FW-001`](07-Process/_standards/Glossary-And-Path-Aliases-Standard.md), [`STD-FW-002`](07-Process/_standards/Workflow-Engine-Standard.md))
-- 📘 [08-Workflow-Engine-Specification](08-Workflow-Engine-Specification.md) — Đặc tả Kỹ thuật Workflow Engine (Multi-Layer Graph, State, DSL)
+- 📁 [07-Process](07-Process/README.md) — Quy trình + Template + **Standards Kit**
 
 > Mới vào? Đọc [07-Process/README](07-Process/README.md) để nắm luật + công cụ.

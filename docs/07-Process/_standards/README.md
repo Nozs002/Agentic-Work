@@ -1,10 +1,7 @@
-# 🛠️ Framework Standards Kit (`docs/07-Process/_standards/`)
+# 🛠️ Framework Multi Agent Agentic Work
 
-> Tập hợp các tiêu chuẩn vận hành chính thức của bộ khung Multi-Agent AgenticWork.
+> Điểm vào cho **người mới** và cho **dự án sau**. Cấu trúc folder đánh số, quy ước đặt tên, song ngữ, wikilink/MOC, và nguyên tắc **mọi việc đều đóng gói + có SOP**. Mục tiêu: đỡ tốn thời gian training, dễ scale, áp dụng lại nhanh.
 
-## 📋 Danh sách tiêu chuẩn
-
-1. 📚 [STD-FW-001: Glossary & Path Aliases Standard](file:///d:/Workspace/Projects/AgenticWork/docs/07-Process/_standards/Glossary-And-Path-Aliases-Standard.md)
-   - Quy định sử dụng thuật ngữ tập trung (`TECH_STACK`, `traceId`, v.v.).
-   - Khai báo Logical Contract Names trong `AGENT.md` thay vì hardcode file paths.
-   - Quản lý ánh xạ đĩa và cấu hình runtime qua `config/glossary.yaml` và `docs/00-Meta/Glossary.md`.
+## Đọc theo thứ tự
+1. [00-docs-process](00-docs-process.md) — **luật nền**: cây folder, đặt tên, song ngữ, wikilink, where-to-put, "đóng gói mọi việc".
+2. [01-glossary-and-path](01-glossary-and-path.md) — **thuật ngữ**: Quy định thuật ngữ và các đường dẫn tài liệu.

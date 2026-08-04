@@ -2,7 +2,7 @@
 
 > **Mã tiêu chuẩn:** `STD-FW-001`  
 > **Phạm vi áp dụng:** Toàn bộ hệ thống Multi-Agent, Sub-Agent Templates, Runtime Engine và MCP Server trong AgenticWork.  
-> **Vị trí tài liệu:** `docs/07-Process/_standards/Glossary-And-Path-Aliases-Standard.md` *(Tiêu chuẩn bộ khung framework)*
+> **Vị trí tài liệu:** `docs/07-Process/_standards/01-Glossary-And-Path.md` *(Tiêu chuẩn bộ khung framework)*
 
 ---
 
