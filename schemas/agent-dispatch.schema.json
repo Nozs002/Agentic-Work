@@ -5,16 +5,22 @@
   "description": "Hợp đồng Dữ liệu Phát Lệnh Thực thi do Orchestrator đóng gói và giao nhiệm vụ cho các Agent/Gateway",
   "type": "object",
   "allOf": [
-    { "$ref": "base-contract.schema.json" }
+    {
+      "$ref": "base-contract.schema.json"
+    }
   ],
-  "required": ["dispatchId", "taskId", "instruction", "assignedRole"],
+  "required": [
+    "dispatchId",
+    "taskId",
+    "instruction",
+    "assignedRole"
+  ],
   "properties": {
     "traceId": {},
     "workflowId": {},
     "timestamp": {},
     "fromAgent": {
-      "const": "ORCHESTRATOR",
-      "description": "BẮT BUỘC: Lệnh Dispatch chỉ được phát tạo duy nhất từ ORCHESTRATOR"
+      "const": "ORCHESTRATOR"
     },
     "toAgent": {},
     "contractType": {
@@ -51,7 +57,9 @@
     },
     "requiredSkills": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Danh sách các Skill được Orchestrator chỉ định tiêm cho Agent trong lệnh này"
     },
     "contextData": {

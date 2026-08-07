@@ -5,9 +5,15 @@
   "description": "Hợp đồng Dữ liệu Đồ thị Công việc (Task DAG) do Planner Agent rã từ Prompt người dùng",
   "type": "object",
   "allOf": [
-    { "$ref": "base-contract.schema.json" }
+    {
+      "$ref": "base-contract.schema.json"
+    }
   ],
-  "required": ["dagId", "intentCategory", "tasks"],
+  "required": [
+    "dagId",
+    "intentCategory",
+    "tasks"
+  ],
   "properties": {
     "traceId": {},
     "workflowId": {},
@@ -27,14 +33,25 @@
     },
     "intentCategory": {
       "type": "string",
-      "enum": ["CODE_GEN", "REQUIREMENTS_REFINEMENT", "BUG_FIX", "ARCHITECTURE_DESIGN", "DOCUMENTATION"],
+      "enum": [
+        "CODE_GEN",
+        "REQUIREMENTS_REFINEMENT",
+        "BUG_FIX",
+        "ARCHITECTURE_DESIGN",
+        "DOCUMENTATION"
+      ],
       "description": "Phân loại ý định chính của yêu cầu"
     },
     "tasks": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["taskId", "stepNumber", "description", "assignedRole"],
+        "required": [
+          "taskId",
+          "stepNumber",
+          "description",
+          "assignedRole"
+        ],
         "properties": {
           "taskId": {
             "type": "string"
@@ -48,7 +65,15 @@
           },
           "assignedRole": {
             "type": "string",
-            "enum": ["BA_AGENT", "ARCHITECT_AGENT", "CODER_AGENT", "DATABASE_AGENT", "TESTER_AGENT", "FILE_SYSTEM_AGENT", "GIT_AGENT"]
+            "enum": [
+              "BA_AGENT",
+              "ARCHITECT_AGENT",
+              "CODER_AGENT",
+              "DATABASE_AGENT",
+              "TESTER_AGENT",
+              "FILE_SYSTEM_AGENT",
+              "GIT_AGENT"
+            ]
           },
           "dependencies": {
             "type": "array",

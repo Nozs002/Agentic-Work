@@ -5,9 +5,16 @@
   "description": "Phong bì Vận chuyển Hạ tầng (Transport Envelope) do Agent Output Adapter đóng gói từ Domain Model để gửi tới Gateway 2 & Action Agent",
   "type": "object",
   "allOf": [
-    { "$ref": "base-contract.schema.json" }
+    {
+      "$ref": "base-contract.schema.json"
+    }
   ],
-  "required": ["resultId", "taskId", "specialistRole", "executionType"],
+  "required": [
+    "resultId",
+    "taskId",
+    "specialistRole",
+    "executionType"
+  ],
   "properties": {
     "traceId": {},
     "workflowId": {},
@@ -25,11 +32,22 @@
     },
     "specialistRole": {
       "type": "string",
-      "enum": ["BA_AGENT", "ARCHITECT_AGENT", "CODER_AGENT", "DATABASE_AGENT", "TESTER_AGENT"]
+      "enum": [
+        "BA_AGENT",
+        "ARCHITECT_AGENT",
+        "CODER_AGENT",
+        "DATABASE_AGENT",
+        "TESTER_AGENT"
+      ]
     },
     "executionType": {
       "type": "string",
-      "enum": ["FILE_CREATE", "FILE_MODIFY", "FILE_DELETE", "CHAT_RESPONSE"],
+      "enum": [
+        "FILE_CREATE",
+        "FILE_MODIFY",
+        "FILE_DELETE",
+        "CHAT_RESPONSE"
+      ],
       "description": "Loại hành động đầu ra hạ tầng đề xuất"
     },
     "domainPayload": {
@@ -41,7 +59,9 @@
       "description": "Dữ liệu thao tác file/đĩa đã qua Agent Output Adapter chuyển đổi từ domainPayload",
       "items": {
         "type": "object",
-        "required": ["targetPath"],
+        "required": [
+          "targetPath"
+        ],
         "properties": {
           "targetPath": {
             "type": "string",
@@ -53,12 +73,27 @@
           },
           "replacementChunk": {
             "type": "object",
-            "required": ["startLine", "endLine", "targetContent", "replacementContent"],
+            "required": [
+              "startLine",
+              "endLine",
+              "targetContent",
+              "replacementContent"
+            ],
             "properties": {
-              "startLine": { "type": "integer", "minimum": 1 },
-              "endLine": { "type": "integer", "minimum": 1 },
-              "targetContent": { "type": "string" },
-              "replacementContent": { "type": "string" }
+              "startLine": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "endLine": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "targetContent": {
+                "type": "string"
+              },
+              "replacementContent": {
+                "type": "string"
+              }
             }
           }
         }
@@ -71,10 +106,14 @@
     "metadata": {
       "type": "object",
       "properties": {
-        "skillUsed": { "type": "string" },
+        "skillUsed": {
+          "type": "string"
+        },
         "affectedModules": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
