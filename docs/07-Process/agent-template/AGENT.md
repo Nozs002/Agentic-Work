@@ -70,7 +70,6 @@ Agent này nhận lệnh khởi chạy từ Orchestrator thông qua gói tin `Ag
   - `dispatchId`: Mã phiên phát lệnh dispatch từ Orchestrator.
   - `taskId`: ID của task tương ứng trong Task DAG.
   - `instruction`: Chỉ thị công việc cụ thể do Orchestrator yêu cầu.
-  - `requiredSkills`: Danh sách các Skill được Orchestrator chỉ định tiêm cho Agent.
   - `contextData`: Bối cảnh hệ thống (Code AST Subgraphs, Business Rules, Data Dictionary) do Knowledge Agent cắt lọc và tiêm vào.
 
 ### 3.2 Output Contract (Dữ liệu Kết quả Trả về)

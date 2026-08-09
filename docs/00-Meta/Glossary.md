@@ -49,6 +49,7 @@
 | `BaseContract` | `schemas/base-contract.schema.json` |
 | `AgentDispatchContract` | `schemas/agent-dispatch.schema.json` |
 | `SpecialistResultContract` | `schemas/specialist-result.schema.json` |
+| `ExecutionPlanContract` | `schemas/execution-plan.schema.json` |
 | `WorkflowDefinitionContract` | `schemas/workflow-definition.schema.json` |
 
 ---

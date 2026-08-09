@@ -56,7 +56,7 @@ flowchart TB
 Hệ thống phân tách thành 3 cấp độ Workflow rõ ràng:
 1. **Layer 1: Orchestrator Workflow (High-Level DAG):** Quản lý luồng tương tác tổng thể giữa các Agent trong hệ thống (Planner $\rightarrow$ Knowledge $\rightarrow$ Specialist Agents $\rightarrow$ Gateways $\rightarrow$ Action Agents).
 2. **Layer 2: Agent Workflow (Agent Internal Flow):** Luồng tư duy nghiệp vụ nội bộ của từng Sub-Agent để hoàn thành chỉ thị từ `AgentDispatchContract`.
-3. **Layer 3: Skill Workflow (Capability Execution Flow):** Mô hình hóa bản thân từng Skill dưới dạng một **Capability Workflow** (gồm các bước rà soát context, đặt câu hỏi, cập nhật bản thảo, tự đánh giá completeness, vòng lặp Loop...). Skill không còn là một đoạn Prompt dài đơn lẻ.
+3. **Layer 3: Skill Workflow (Capability Execution Flow):** Mô hình hóa bản thân từng Skill dưới dạng một **Capability Workflow** (gồm các bước rà soát context, đặt câu hỏi, cập nhật bản thảo, tự đánh giá completeness, vòng lặp Loop...). Skill không còn là một đoạn Prompt dài đơn lẻ. **Triết lý tự chủ (Autonomy Principle): "Agent quyết định Skill, không phải Planner/Orchestrator".** Khi nhận được lệnh, Specialist Agent sẽ tự đọc `instruction` và quyết định kích hoạt Skill nào phù hợp nhất trong kho `Allowed Skills` của mình.
 
 ### Quy tắc 5: Đa dạng Luồng Đồ thị (Edges & Execution Control)
 Workflow Engine hỗ trợ đầy đủ các kiểu luồng điều khiển:

@@ -55,13 +55,6 @@
       "type": "string",
       "description": "Chỉ thị/Yêu cầu chi tiết do Orchestrator ban xuống cho Agent thực hiện"
     },
-    "requiredSkills": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Danh sách các Skill được Orchestrator chỉ định tiêm cho Agent trong lệnh này"
-    },
     "contextData": {
       "type": "object",
       "description": "Bối cảnh đi kèm (Code AST Subgraphs, Business Rules, hoặc Feedback sửa lỗi nếu là lặp lại)"

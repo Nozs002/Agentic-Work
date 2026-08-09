@@ -1,0 +1,76 @@
+{
+  "traceId": "trace-customer-group-001",
+  "planId": "plan-feature-001",
+  "fromAgent": "PLANNER_AGENT",
+  "toAgent": "ORCHESTRATOR",
+  "contractType": "EXECUTION_PLAN",
+  "planStatus": "READY",
+  "timestamp": "2026-08-07T18:00:00Z",
+  "userPrompt": "Thêm tính năng Phân nhóm Khách hàng (Customer Group) với các trường tên, mô tả, và rule tự động xếp hạng.",
+  "taskCategory": "implementation",
+  "confidence": 0.91,
+  "goal": "Phát triển tính năng phân nhóm khách hàng (Customer Group) bao gồm Database, API và UI.",
+  "summary": "Implement Customer Group feature. Need Database migration, Backend CRUD APIs, and Frontend UI components.",
+  "assumptions": [
+    "Project has existing authentication and authorization module",
+    "Database is PostgreSQL",
+    "Frontend is using React"
+  ],
+  "risks": [
+    "Database migration for existing customer records",
+    "Performance impact of auto-ranking rules"
+  ],
+  "successCriteria": [
+    "Migration chạy thành công không mất dữ liệu",
+    "Các API CRUD cho Customer Group hoạt động đúng phân quyền",
+    "Giao diện Frontend hiển thị đúng danh sách và rule tự động"
+  ],
+  "dag": {
+    "parallelGroups": [
+      [
+        "task-02-backend",
+        "task-03-frontend"
+      ]
+    ],
+    "tasks": [
+      {
+        "taskId": "task-01-db",
+        "stepNumber": 1,
+        "description": "Thiết kế và khởi tạo Database Schema cho Customer Group",
+        "assignedRole": "DATABASE_AGENT",
+        "expectedOutput": "CustomerGroupSchemaMigration"
+      },
+      {
+        "taskId": "task-02-backend",
+        "stepNumber": 2,
+        "description": "Implement luồng CRUD API cho Customer Group",
+        "assignedRole": "CODER_AGENT",
+        "expectedOutput": "CustomerGroupAPIs",
+        "dependencies": [
+          "task-01-db"
+        ]
+      },
+      {
+        "taskId": "task-03-frontend",
+        "stepNumber": 3,
+        "description": "Xây dựng giao diện quản lý Customer Group trên Frontend",
+        "assignedRole": "CODER_AGENT",
+        "expectedOutput": "CustomerGroupUI",
+        "dependencies": [
+          "task-01-db"
+        ]
+      },
+      {
+        "taskId": "task-04-qa",
+        "stepNumber": 4,
+        "description": "Viết kịch bản kiểm thử tự động cho Customer Group",
+        "assignedRole": "TESTER_AGENT",
+        "expectedOutput": "CustomerGroupTests",
+        "dependencies": [
+          "task-02-backend",
+          "task-03-frontend"
+        ]
+      }
+    ]
+  }
+}

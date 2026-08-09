@@ -1,9 +1,8 @@
 ---
 name: skill-<role>-<name-kebab>
 type: skill
-intentCategory: CODE_GEN # Enum: REQUIREMENTS_REFINEMENT | CODE_GEN | BUG_FIX | ARCHITECTURE_DESIGN | DOCUMENTATION | TESTING
 description: >
-  Mô tả chi tiết mục tiêu, bài toán giải quyết và hoàn cảnh áp dụng của Skill để Orchestrator match chính xác ý định...
+  Mô tả chi tiết mục tiêu, bài toán giải quyết và hoàn cảnh áp dụng của Skill để Agent tự đọc và quyết định có dùng skill này hay không.
 target_agent: <CODER_AGENT | BA_AGENT | ARCHITECT_AGENT | TESTER_AGENT>
 intent_triggers: ["<trigger 1>", "<trigger 2>"]
 
@@ -14,12 +13,11 @@ when_to_use:
   do_not_use_if:
     - "<Điều kiện từ chối 1 — VD: Yêu cầu đã đầy đủ thông tin → Chuyển sang skill write-spec>"
 
-# Phân biệt Ranh giới với các Skill khác (Tránh Orchestrator gọi nhầm)
+# Phân biệt Ranh giới với các Skill khác (Để Agent không nhầm lẫn khi tự chọn Skill)
 related_skills:
   - name: "skill-<role>-<other-skill-kebab>"
     difference: "<Mô tả điểm KHÁC BIỆT CỐT LÕI giữa skill này và skill lân cận>"
 
-required_contracts: ["ContextPayloadContract", "SpecialistResultContract"]
 tags: ["<tag 1>", "<tag 2>"]
 ---
 
