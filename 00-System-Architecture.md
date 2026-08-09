@@ -70,6 +70,7 @@ flowchart TB
 *   **Layer 1 - Orchestrator Workflow (High-Level DAG):** Luồng đồ thị điều phối giữa các Agent (`Planner → Knowledge → Specialist Agent → Gateway → Action Agent`).
 *   **Layer 2 - Agent Workflow (Agent Internal Flow):** Luồng tư duy nghiệp vụ nội bộ của từng Sub-Agent.
 *   **Layer 3 - Skill Workflow (Capability Execution Flow):** Mô hình hóa bản thân từng Skill dưới dạng một **Capability Graph** (`Prepare → Ask → Update → Evaluate → Loop → Finalize`). Skill không còn là Prompt dài tĩnh.
+    > **Triết lý Cốt lõi (Autonomy Principle):** "Agent quyết định Skill, không phải Planner". Planner chỉ gán `assignedRole` (VD: `DATABASE_AGENT`). Khi Specialist Agent thức dậy, nó sẽ tự đọc `instruction` và tự quyết định kích hoạt Skill nào phù hợp nhất (VD: `migration-planning` hay `schema-design`). Điều này đảm bảo tính đóng gói và mở rộng (Loose Coupling).
 
 #### 💡 b. Tác tử Chuyên gia (Specialist Agents — Chỉ Tư duy, KHÔNG ghi file)
 > **Nguyên tắc An toàn:** Nhóm này chỉ hoạt động trong RAM/Context để suy luận, phân tích và sinh code/spec nháp, **tuyệt đối không có quyền gọi File System API hay Git API**.

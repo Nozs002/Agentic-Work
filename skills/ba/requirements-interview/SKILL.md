@@ -10,7 +10,6 @@ description: >
   cái gì chưa chắc thì ghi thành OPEN QUESTION để xác nhận lại với stakeholder. Đầu ra: một
   bản Change Request nháp ĐÚNG template vault + danh sách câu hỏi gửi khách, sẵn sàng bàn giao
   cho module-documentation (viết spec) và jira-integration (tạo task).
-intentCategory: REQUIREMENTS_REFINEMENT
 triggers:
   - "làm rõ yêu cầu này"
   - "phỏng vấn yêu cầu"
