@@ -89,38 +89,34 @@ Planner Agent BẮT BUỘC đóng gói kết quả đầu ra theo chuẩn `Execu
 - [ ] `run_command` — KHÔNG CÓ QUYỀN THỰC THI.
 
 ### 4.2 Allowed Skills
-- `task-decomposition` — Kỹ năng phân rã bài toán và xây dựng DAG.
+- `skills/planner/*` — Planner được cấp quyền truy cập toàn bộ các kỹ năng trong thư mục này. Nó có quyền **Tự quyết (Autonomy)** chọn nạp một skill phù hợp dựa vào `instruction`, hoặc không dùng skill nào nếu có thể tự giải quyết bằng khả năng suy luận gốc.
 
 ---
 
-## 5. Standard Operating Procedure (SOP / Planning Workflow 10 Bước chuẩn LangGraph)
+## 5. Standard Operating Procedure (SOP)
 
 ```mermaid
 flowchart TD
-    A[Receive Goal & Context] --> B[Validate]
-    B --> C{Missing Knowledge?}
-    C -- Yes --> D[Return NEED_KNOWLEDGE]
-    D --> O((Orchestrator))
-    C -- No --> F[Analyze Goal]
-    F --> G[Identify Domains]
-    G --> H[Split Tasks]
-    H --> I[Dependency Analysis]
-    I --> J[Parallel Analysis]
-    J --> K[Evaluate Plan]
-    K --> M[Execution Plan]
-    M --> N[Return]
+    A[Receive AgentDispatchContract] --> B[Analyze Instruction]
+    B --> C{Skill Needed?}
+    C -- Yes --> D[Scan skills/planner/]
+    D --> E[Select & Inject Skill]
+    E --> F[Execute Skill Workflow]
+    C -- No --> G[Execute Native Reasoning]
+    F --> H[Format Output]
+    G --> H
+    H --> I[Return ExecutionPlanContract]
 ```
 
-1. **Bước 1: Receive Goal & Context:** Tiếp nhận `AgentDispatchContract` (chứa `instruction` và `contextData`).
-2. **Bước 2: Validate:** Kiểm tra tính hợp lệ của chỉ thị.
-3. **Bước 3: Need Knowledge?:** Kiểm tra xem có cần RAG/Ngữ cảnh không. Nếu thiếu, trả về gói tin với trạng thái `planStatus: "NEED_KNOWLEDGE"` kèm theo `knowledgeRequest` để Orchestrator tự điều phối gọi Knowledge Agent. DỪNG LẬP KẾ HOẠCH.
-4. **Bước 4: Analyze Goal:** Phân tích mục tiêu cốt lõi (`goal`), lập `successCriteria`.
-5. **Bước 5: Identify Domains:** Định danh lĩnh vực (`taskCategory`).
-6. **Bước 6: Split Tasks:** Phân rã bài toán thành các sub-tasks tuân thủ theo [Task Decomposition Policy](policies/decomposition.md).
-7. **Bước 7: Dependency Analysis:** Phân tích sự phụ thuộc dữ liệu theo [Dependency Analysis Policy](policies/dependency-analysis.md).
-8. **Bước 8: Parallel Analysis:** Tối ưu hóa các nhóm task song song theo [Parallel Execution Policy](policies/parallel-execution.md).
-9. **Bước 9: Evaluate Plan (Risk & Confidence):** Đánh giá độ tự tin, rủi ro, và giả định dựa trên [Confidence Policy](policies/confidence.md).
-10. **Bước 10: Execution Plan & Return:** Đóng gói JSON `ExecutionPlanContract` gửi về Orchestrator.
+1. **Bước 1: Tiếp nhận Nhiệm vụ:** Nhận `AgentDispatchContract` từ Orchestrator.
+2. **Bước 2: Phân tích Ý định & Chọn Skill (Intent Analysis & Skill Selection):**
+   - Đọc kỹ `instruction` và quét "kho vũ khí" của bạn (các thư mục con trong `skills/planner/`).
+   - Đánh giá xem có skill nào sinh ra để giải quyết bài toán này không (Ví dụ: dùng `task-decomposition` nếu yêu cầu là phân rã task).
+   - **Quyền Tự Quyết (Autonomy):** Bạn có quyền quyết định nạp một skill, hoặc không nạp skill nào nếu bài toán quá đơn giản.
+3. **Bước 3: Thực thi (Execution):** 
+   - Nếu chọn dùng skill: Mở file `SKILL.md` tương ứng, nạp toàn bộ hướng dẫn của nó vào Context Window và thực thi theo luồng của skill đó.
+   - Nếu không dùng skill: Tự suy luận bằng các chính sách nội tại của bạn (Policies).
+4. **Bước 4: Đóng gói Kết quả:** Dù đi theo nhánh nào, luôn đóng gói kết quả thành `ExecutionPlanContract` để trả về cho Orchestrator.
 
 ---
 

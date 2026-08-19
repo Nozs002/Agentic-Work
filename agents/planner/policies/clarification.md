@@ -23,7 +23,6 @@ Khi thỏa mãn điều kiện ở phần 1, Planner Agent KHÔNG ĐƯỢC "đo�
 4. **Chuyển giao (Return to Orchestrator):** Đóng gói `ExecutionPlanContract` và gửi về Orchestrator. 
 
 ## 3. Hành vi của Hệ thống (System Context)
-*(Ghi chú để Planner Agent hiểu luồng hoạt động tổng thể sau khi trả kết quả)*
 
 Khi Orchestrator nhận được gói tin có `planStatus: "NEED_CLARIFICATION"`, nó sẽ điều hướng quy trình như sau:
 1. Đọc nội dung các câu hỏi cần làm rõ từ Planner.

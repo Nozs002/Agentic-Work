@@ -20,13 +20,12 @@ Khi được gọi, hãy tuần tự thực hiện tư duy theo các bước sau
    - Nếu đã ĐỦ bối cảnh (Context Data đã được nạp): Đi tiếp bước 4.
 4. **Analyze Goal:** Viết ra `goal` (mục tiêu cốt lõi) và `successCriteria` (danh sách tiêu chí nghiệm thu toàn bộ quá trình).
 5. **Identify Domains:** Gán `taskCategory` linh hoạt (ví dụ: `implementation`, `architecture`, `business-analysis`...). Tuyệt đối không bị gò bó bởi enum.
-6. **Split Tasks:** Phân rã bài toán thành các sub-tasks.
+6. **Split Tasks:** Phân rã bài toán thành các sub-tasks. *Bắt buộc tuân thủ tiêu chuẩn tại* `../../agents/planner/policies/decomposition.md`. Tùy thuộc vào bản chất yêu cầu, hãy tra cứu các chế độ lập kế hoạch tại `../../agents/planner/planning-modes/` (Ví dụ: `feature.md`, `bug-fix.md`).
    - Chỉ định nghĩa **WHAT** (Làm cái gì) + **WHO** (Giao cho ai), tuyệt đối không thiết kế **HOW** (Giải pháp chi tiết).
    - Gán `assignedRole` và `expectedOutput` (Kỳ vọng đầu ra).
-   - *Quy tắc Epic:* 7 task chỉ là độ mịn khuyến nghị. Nếu Epic quá lớn, Planner lập Phase Plan và để Orchestrator tự điều hướng tiếp các Phase (không ép buộc phải gán cho BA hay Architect).
-7. **Dependency Analysis:** Xác định `dependencies`. Task nào là tiên quyết? (Đảm bảo Acyclic Graph - không lặp vòng).
-8. **Parallel Analysis:** Bất kỳ task nào không bị ràng buộc phụ thuộc lẫn nhau $\rightarrow$ Gom chung vào một mảng trong `parallelGroups` để Orchestrator kích hoạt chạy song song.
-9. **Evaluate Plan (Risk & Confidence):** Liệt kê rủi ro (`risks`) và giả định (`assumptions`). Đánh giá `confidence` (0.0 đến 1.0). Nếu `< 0.3` (rủi ro cực cao), đặt `planStatus: "ASK_USER"`. Nếu quá mơ hồ, đặt `planStatus: "NEED_CLARIFICATION"`.
+7. **Dependency Analysis:** Xác định `dependencies`. Đảm bảo Đồ thị không lặp vòng (Acyclic) bằng cách tham chiếu `../../agents/planner/policies/dependency-analysis.md`.
+8. **Parallel Analysis:** Bất kỳ task nào không bị ràng buộc phụ thuộc lẫn nhau $\rightarrow$ Gom chung vào một mảng trong `parallelGroups`. Hướng dẫn chi tiết tại `../../agents/planner/policies/parallel-execution.md`.
+9. **Evaluate Plan (Risk & Confidence):** Đánh giá rủi ro, giả định và độ tự tin (Confidence). *Bắt buộc tuân thủ* `../../agents/planner/policies/confidence.md`. Nếu Prompt mâu thuẫn, áp dụng `../../agents/planner/policies/clarification.md`.
 10. **Finalize:** Đóng gói JSON theo chuẩn `ExecutionPlanContract`. Nếu mọi thứ trơn tru, `planStatus` phải là `"READY"` và bắt buộc có `dag`.
 
 ## 3. Quy tắc Vàng (Golden Rules)
