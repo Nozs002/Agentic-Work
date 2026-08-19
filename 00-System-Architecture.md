@@ -1,6 +1,9 @@
 # Kiến trúc Hệ thống & Luồng Điều phối Đa tác tử (Multi-Agent System Architecture)
 
 > **Tài liệu Chi tiết về Kiến trúc Phân tầng, Phân chia Agent, Cơ chế Kiểm duyệt, Đồng bộ Skill & Tích hợp Thư viện Bên thứ ba (3rd-Party Skills)**
+>
+> 🚀 **Ghi chú Giai đoạn Khởi tạo (Phase 1): Thiết kế riêng cho Antigravity**
+> Ở giai đoạn đầu, thay vì xây dựng một hệ thống Node.js độc lập, toàn bộ Đồ thị Đa tác tử (Agent Graph) và Hợp đồng (Contracts) được thiết kế để ánh xạ trực tiếp thành các **Customizations (Rules & Skills)** nội tại của **Antigravity IDE**. Antigravity sẽ đóng vai trò là Orchestrator và thực thi các Agent ngay trong IDE.
 
 ---
 
@@ -61,7 +64,7 @@ flowchart TB
 ### Phân loại các Agent trong Hệ thống
 
 #### 🧠 a. Bộ Điều phối & Quản lý Trạng thái (Orchestration, Workflow Engine & State Management)
-*   **Orchestrator (Workflow Engine):** "Bộ brain" trung tâm vận hành Động cơ Workflow theo các pattern của LangGraph (`STD-FW-002`). Quản lý độc quyền `WorkflowState`, phân loại ý định (Intent Classification) và điều phối luồng dữ liệu giữa các Node (Agent/Skill) thông qua Hợp đồng Dữ liệu (Contract-based Execution). **Tuyệt đối không cho phép Agent giao tiếp trực tiếp với nhau.**
+*   **Orchestrator (Workflow Engine):** "Bộ brain" trung tâm vận hành Động cơ Workflow theo các pattern của LangGraph (`STD-FW-002`). Quản lý độc quyền `WorkflowState`, phân loại ý định (Intent Classification) và điều phối luồng dữ liệu giữa các Node (Agent/Skill) thông qua Hợp đồng Dữ liệu (Contract-based Execution). **Nhiệm vụ cốt lõi bao gồm nạp cấu trúc tĩnh từ `config/agents.yaml` (Agent Registry) và phân phối danh bạ này cho Planner Agent để đảm bảo tính Decoupled.** Tuyệt đối không cho phép Agent giao tiếp trực tiếp với nhau.
 *   **Planner Agent (Task Orchestrator):** Phân rã prompt phức tạp thành **Đồ thị Công việc (Task DAG - Directed Acyclic Graph)**.
 *   **Knowledge Agent (Context Orchestrator):** Phân tích ý định ngữ cảnh, suy luận phụ thuộc, bóc tách **Code AST Graph** & **Business Rules**, tối ưu Token và chuẩn bị bối cảnh chuẩn xác nhất cho các Specialist Agents.
 *   **State Manager & WorkflowState:** Quản lý context window, bộ nhớ phiên làm việc, lưu giữ snapshot trạng thái (`Checkpoint`) phục vụ Human-in-the-Loop và đếm số vòng lặp sửa lỗi (**Retry Loop Counter**).
