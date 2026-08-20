@@ -135,6 +135,7 @@ flowchart TB
 1. **Layer 1: Orchestrator Workflow (Agent Graph DAG):**
    - Đồ thị mức cao nhất giữa các Agent.
    - Điều phối tuần tự/song song qua Orchestrator: `Planner → Knowledge → Specialist Agent → Gateway → Action Agent`.
+   - **JIT Context Injection:** Orchestrator tự động nạp danh bạ năng lực từ `config/agents.yaml` và nhúng (inject) vào Input Contract trước khi kích hoạt Planner Agent.
 2. **Layer 2: Agent Workflow (Agent Internal Flow):**
    - Quy trình tư duy nội bộ của từng Sub-Agent để xử lý một task cụ thể trong DAG.
 3. **Layer 3: Skill Workflow (Capability Execution Flow):**

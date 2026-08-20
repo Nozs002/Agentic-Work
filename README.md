@@ -1,6 +1,8 @@
 # Agentic Work: Nền tảng Hạ tầng Đa tác tử AI
 
 > **Động cơ trung gian (Middleware Engine) kết nối các AI IDE với Codebase quy mô lớn thông qua Đồ thị Tri thức Kép và chuẩn giao tiếp MCP, đảm bảo mã nguồn sinh ra 100% tuân thủ quy tắc nghiệp vụ.**
+>
+> 🚀 **Ghi chú Giai đoạn Khởi tạo (Phase 1):** Hiện tại, toàn bộ hệ thống đang được thiết kế và tối ưu riêng để chạy trực tiếp (natively) trên nền tảng **Antigravity IDE**. Các tác tử (Agent) và kỹ năng (Skill) sẽ được ánh xạ thành hệ sinh thái **Antigravity Customizations (Rules & Skills)**, cho phép vận hành luồng làm việc đa tác tử ngay trong IDE mà chưa cần chạy server Node.js độc lập.
 
 ---
 

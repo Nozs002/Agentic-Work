@@ -1,0 +1,74 @@
+# Agent Capability Catalog (Danh bạ năng lực Agent)
+# File này được Orchestrator tự động đọc và nhúng (inject) vào trường `contextData`
+# khi gửi lệnh AgentDispatchContract cho Planner Agent. Nhờ đó Planner biết được hệ thống
+# đang có những agent nào và năng lực ra sao để chia Task.
+
+agents:
+  - id: "BA_AGENT"
+    name: "Business Analyst Agent"
+    layer: "Layer 1"
+    capabilities:
+      - "Làm rõ yêu cầu người dùng (Clarification)"
+      - "Phỏng vấn và bóc tách Requirement"
+      - "Viết tài liệu đặc tả nghiệp vụ (PRD, Requirement Spec)"
+    limitations:
+      - "Không viết mã nguồn (Code)"
+      - "Không thiết kế kiến trúc kỹ thuật"
+
+  - id: "ARCHITECT_AGENT"
+    name: "System Architect Agent"
+    layer: "Layer 1"
+    capabilities:
+      - "Thiết kế kiến trúc hệ thống tổng thể (Architecture Design)"
+      - "Phân tích tác động (Impact Analysis) cho các tính năng mới/CR"
+      - "Định hình cấu trúc thư mục và Tech Stack"
+    limitations:
+      - "Chỉ ra quyết định ở mức độ High-level, không implement tính năng chi tiết"
+
+  - id: "CODER_AGENT"
+    name: "Software Engineer Agent"
+    layer: "Layer 3"
+    capabilities:
+      - "Viết và sửa mã nguồn (Backend, Frontend, Scripts)"
+      - "Hiện thực hóa (Implement) API và Logic nghiệp vụ"
+      - "Fix lỗi (Bug fix) từ báo cáo của QA"
+    limitations:
+      - "Không được phép thay đổi cấu trúc Database nếu chưa thông qua DATABASE_AGENT"
+
+  - id: "DATABASE_AGENT"
+    name: "Database Administrator Agent"
+    layer: "Layer 3"
+    capabilities:
+      - "Thiết kế và tối ưu Database Schema"
+      - "Viết các tệp Migration, Seeding"
+      - "Tối ưu hóa câu truy vấn SQL (Query Optimization)"
+    limitations:
+      - "Chỉ tập trung vào tầng Dữ liệu (Data Layer), không dính líu đến UI/UX hay API routing"
+
+  - id: "TESTER_AGENT"
+    name: "QA & Tester Agent"
+    layer: "Layer 4"
+    capabilities:
+      - "Viết Test tự động (Unit Test, Integration, E2E)"
+      - "Tái hiện lỗi (Reproduce bugs) thông qua Test-Driven Development (TDD)"
+      - "Báo cáo lỗi và gửi lại cho CODER_AGENT"
+    limitations:
+      - "Không được quyền sửa code chính (src) để fix bug, chỉ được viết file test"
+
+  - id: "FILE_SYSTEM_AGENT"
+    name: "File System Action Agent"
+    layer: "Layer 4"
+    capabilities:
+      - "Thực thi ghi (write), sửa (modify), xóa (delete) file an toàn trên đĩa cứng"
+      - "Thao tác cấu trúc thư mục (mkdir, mv)"
+    limitations:
+      - "Đây là Action Agent (Robot). Không có tư duy tự sửa code, chỉ nhận gói payload dạng byte/text từ các Layer trên và ghi đĩa y hệt."
+
+  - id: "GIT_AGENT"
+    name: "Version Control Agent"
+    layer: "Layer 4"
+    capabilities:
+      - "Tạo branch, commit changes, và push code"
+      - "Rollback (Revert) khi hệ thống gặp lỗi"
+    limitations:
+      - "Chỉ quản lý phiên bản, không đọc hiểu logic nghiệp vụ của code"

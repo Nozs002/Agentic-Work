@@ -72,7 +72,10 @@ export interface AgentDispatchContract extends BaseContract {
   assignedRole: string;
   instruction: string;
   requiredSkills?: string[];
-  contextData?: Record<string, any>;
+  contextData?: {
+    agentCatalog?: Record<string, any>; // Danh bạ năng lực Agent (inject từ config/agents.yaml)
+    [key: string]: any;                 // Code AST Subgraphs, Business Rules, Feedback...
+  };
   isRetry?: boolean;
 }
 ```
